@@ -7,38 +7,29 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "EVENT")
+@Table(name = "event")
 public class Event {
 
     @Id
-    @Column(name = "EVENT_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eventId;
+    @Column(name = "event_id")
+    private String eventId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EVENT_TYPE_ID",referencedColumnName = "EVENT_TYPE_ID")
+    @Column(name = "event_type")
     private EventType eventType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EVENT_STATUS_ID",referencedColumnName = "EVENT_STATUS_ID")
+    @Column(name = "event_status")
     private EventStatus eventStatus;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "STATISTIC_ID",referencedColumnName = "STATISTIC_ID")
+    @JoinColumn(name = "statistic_id")
     private Statistic statistic;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "TOURNAMENT_ID")
+    @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
-    @Column(name = "FLASHSCORE_ID")
-    private String flashscoreId;
-
-    @Column(name="DESCRIPTION")
-    private String description;
-
-    @Column(name = "START_DATETIME")
-    private Date startDateTime;
+    @Column(name = "START_TIME")
+    private Date startTime;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
     private List<Outcome> outcomeList = new ArrayList<>();
@@ -46,11 +37,11 @@ public class Event {
     public Event() {
     }
 
-    public Long getEventId() {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId(Long eventId) {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
@@ -86,28 +77,12 @@ public class Event {
         this.tournament = tournament;
     }
 
-    public String getFlashscoreId() {
-        return flashscoreId;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setFlashscoreId(String flashscoreId) {
-        this.flashscoreId = flashscoreId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getStartDateTime() {
-        return startDateTime;
-    }
-
-    public void setStartDateTime(Date startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public List<Outcome> getOutcomeList() {
@@ -139,9 +114,7 @@ public class Event {
         sb.append(", eventStatus=").append(eventStatus);
         sb.append(", statistic=").append(statistic);
         sb.append(", tournament=").append(tournament);
-        sb.append(", flashscoreId='").append(flashscoreId).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", startDateTime=").append(startDateTime);
+        sb.append(", startTime=").append(startTime);
         sb.append('}');
         return sb.toString();
     }

@@ -1,32 +1,35 @@
 package com.elitbet.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "OUTCOME")
+@Table(name = "outcome")
 public class Outcome {
     @Id
-    @Column(name="OUTCOME_ID")
+    @Column(name="outcome_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long outcomeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EVENT_ID")
+    @JoinColumn(name = "event_id")
     private Event event;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OUTCOME_TYPE_ID",referencedColumnName = "OUTCOME_TYPE_ID")
+    @Column(name = "outcome_type")
     private OutcomeType outcomeType;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OUTCOME_STATUS_ID",referencedColumnName = "OUTCOME_STATUS_ID")
+    @Column(name = "outcome_status")
     private OutcomeStatus outcomeStatus;
 
-    @Column(name = "PARAMETERS")
+    @OneToMany(mappedBy = "outcome")
+    private List<Wager> wagerList = new ArrayList<>();
+
+    @Column(name = "parameters")
     private String parameters;
 
-    @Column(name="ODDS")
+    @Column(name="odds")
     private double odds;
 
     public Outcome() {
@@ -80,6 +83,14 @@ public class Outcome {
         this.odds = odds;
     }
 
+    public List<Wager> getWagerList() {
+        return wagerList;
+    }
+
+    public void setWagerList(List<Wager> wagerList) {
+        this.wagerList = wagerList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,4 +116,6 @@ public class Outcome {
         sb.append('}');
         return sb.toString();
     }
+
+
 }

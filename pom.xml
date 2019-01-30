@@ -12,11 +12,22 @@
         <module>elitbet-parser</module>
         <module>elitbet-customer-api</module>
         <module>elitbet-lines-api</module>
-        <module>alitbet-bets-api</module>
+        <module>elitbet-bets-api</module>
         <module>elitbet-web</module>
         <module>elitbet-domain</module>
     </modules>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

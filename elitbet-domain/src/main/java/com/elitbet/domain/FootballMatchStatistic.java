@@ -4,21 +4,21 @@ import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Entity(name= "FOOTBALL_MATCH_STATISTIC")
-@Table(name="FOOTBALL_MATCH_STATISTIC")
-@PrimaryKeyJoinColumn(name = "STATISTIC_ID")
+@Entity()
+@Table(name="football_match_statistic")
+@PrimaryKeyJoinColumn(name = "statistic_id")
 public class FootballMatchStatistic extends Statistic {
 
-    @Column(name="HOME_NAME")
+    @Column(name="home_name")
     private String homeName;
 
-    @Column(name="AWAY_NAME")
+    @Column(name="away_name")
     private String awayName;
 
-    @Column(name="HOME_GOALS")
+    @Column(name="home_goals")
     private int homeGoals;
 
-    @Column(name="AWAY_GOALS")
+    @Column(name="away_goals")
     private int awayGoals;
 
     public FootballMatchStatistic() {

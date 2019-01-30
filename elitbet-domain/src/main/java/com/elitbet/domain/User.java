@@ -6,38 +6,35 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name="CLIENT")
-public class Client {
+@Table(name="client")
+public class User {
 
     @Id
-    @Column(name = "CLIENT_ID")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long clientId;
+    private long userId;
 
-    @Column(name="NAME")
+    @Column(name="name")
     private String name;
 
-    @Column(name="EMAIL")
-    private String email;
-
-    @Column(name="PASSWORD")
+    @Column(name="password")
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     private List<Wager> wagerList = new ArrayList<>();
 
-    @Column(name = "BANK_VALUE")
+    @Column(name = "bank_value")
     private double bankValue;
 
-    public Client() {
+    public User() {
     }
 
-    public long getClientId() {
-        return clientId;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -46,14 +43,6 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -84,21 +73,20 @@ public class Client {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(clientId, client.clientId);
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId);
+        return Objects.hash(userId);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Client{");
-        sb.append("clientId=").append(clientId);
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("userId=").append(userId);
         sb.append(", name='").append(name).append('\'');
-        sb.append(", email='").append(email).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", bankValue=").append(bankValue);
         sb.append('}');

@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "TOURNAMENT")
+@Table(name = "tournament")
 public class Tournament {
     @Id
-    @Column(name = "TOURNAMENT_ID")
+    @Column(name = "tournament_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tournamentId;
 
-    @Column(name="DESCRIPTION")
+    @Column(name="description")
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tournament")

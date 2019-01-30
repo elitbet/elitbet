@@ -1,26 +1,31 @@
 package com.elitbet.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.Map;
 
 @Entity(name="STATISTIC")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "STATISTIC")
-@Setter
-@Getter
-@NoArgsConstructor
-@ToString
 public abstract class Statistic {
 
     @Id
     @Column(name="STATISTIC_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statisticId;
+
+    @OneToOne(mappedBy = "statistic")
+    private Event event;
+
+    public Statistic() {
+    }
+
+    public Long getStatisticId() {
+        return statisticId;
+    }
+
+    public void setStatisticId(Long statisticId) {
+        this.statisticId = statisticId;
+    }
 
     public abstract String names();
 

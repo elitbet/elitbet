@@ -4,29 +4,28 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "WAGER")
+@Table(name = "wager")
 public class Wager {
     @Id
-    @Column(name = "WAGER_ID")
+    @Column(name = "wager_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long wagerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OUTCOME_ID", referencedColumnName = "OUTCOME_ID")
+    @JoinColumn(name = "outcome_id")
     private Outcome outcome;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CLIENT_ID")
-    private Client client;
+    @JoinColumn(name = "client_id")
+    private User user;
 
-    @OneToOne
-    @JoinColumn(name = "WAGER_STATUS_ID",referencedColumnName = "WAGER_STATUS_ID")
+    @Column(name = "wager_status")
     private WagerStatus wagerStatus;
 
-    @Column(name = "ODDS")
+    @Column(name = "odds")
     private double odds;
 
-    @Column(name = "BET_VALUE")
+    @Column(name = "bet_value")
     private double betValue;
 
     public Wager() {
@@ -48,12 +47,12 @@ public class Wager {
         this.outcome = outcome;
     }
 
-    public Client getClient() {
-        return client;
+    public User getUser() {
+        return user;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public WagerStatus getWagerStatus() {
@@ -98,7 +97,7 @@ public class Wager {
         final StringBuilder sb = new StringBuilder("Wager{");
         sb.append("wagerId=").append(wagerId);
         sb.append(", outcome=").append(outcome);
-        sb.append(", client=").append(client);
+        sb.append(", user=").append(user);
         sb.append(", wagerStatus=").append(wagerStatus);
         sb.append(", odds=").append(odds);
         sb.append(", betValue=").append(betValue);
