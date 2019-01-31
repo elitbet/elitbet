@@ -1,6 +1,7 @@
 package com.elitbet.service;
 
 import com.elitbet.model.Fixture;
+import com.elitbet.model.TournamentWrapper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +10,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,29 +22,75 @@ public class FlashscoreLoader {
     @Autowired
     private ChromeOptions options;
 
-    private static Queue<WebElement> tournamentElements;
+    private final int COUNT_DEFAULT = 5;
+    private int tomorrowCount = COUNT_DEFAULT;
+    private int yesterdayCount = COUNT_DEFAULT;
+
+    private static Queue<TournamentWrapper> tournamentWrappers = new ConcurrentLinkedQueue<>();
 
     public void run(){
+        //runExecutorService();
+        while (true){
+            parseFootballMain();
+        }
+    }
 
+    private void parseFootballMain(){
         WebDriver driver = new ChromeDriver(options);;
-
         String url = "https://www.flashscore.com/";
         driver.get(url);
+        loadTournaments(driver);
+        if(tomorrowCount-- < 0){
+            WebElement tomorrow = driver.findElement(By.className("tomorrow"));
+            parseFootballTomorrow(driver,tomorrow);
+            tomorrowCount = COUNT_DEFAULT;
+        }else if(yesterdayCount-- < 0){
+            WebElement yesterday = driver.findElement(By.className("yesterday"));
+            parseFootballYesterday(driver, yesterday);
+            yesterdayCount = COUNT_DEFAULT;
+        }
+    }
 
+    private void parseFootballYesterday(WebDriver driver, WebElement yesterday){
+        System.out.println("yesterday");
+        yesterday.click();
+        loadTournaments(driver);
+    }
+
+    private void parseFootballTomorrow(WebDriver driver, WebElement tomorrow){
+        System.out.println("tomorrow");
+        tomorrow.click();
+        loadTournaments(driver);
+    }
+
+    private void loadTournaments(WebDriver driver){
         WebElement date = driver.findElement(By.xpath("//span[2]/span/a"));
-        tournamentElements = new ConcurrentLinkedQueue<>(driver.findElements(By.xpath("//div/table")));
+        List<WebElement> tournaments = driver.findElements(By.xpath("//div/table"));
+        for(WebElement tournament:tournaments){
+            tournamentWrappers.add(new TournamentWrapper(tournament,date));
+        }
+        System.out.println("-------------------------------SIZE: " + tournamentWrappers.size());
+    }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for(int i=0;i<5;i++){
+    private void runExecutorService(){
+
+        int threadCount = 10;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        for(int i=0;i<threadCount;i++){
             executorService.execute(() -> {
-                WebElement tournamentElement = tournamentElements.poll();
-                if(tournamentElement!=null){
-                    WebElement country = tournamentElement.findElement(By.className("country_part"));
-                    WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
-                    List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
-                    for(WebElement event:eventElements) {
-                        String fixtureUrl = fixtureUrl(date, tournament, country, event);
-                        System.out.println(fixtureUrl);
+                while(true) {
+                    TournamentWrapper tournamentWrapper = tournamentWrappers.poll();
+                    if (tournamentWrapper != null) {
+                        WebElement date = tournamentWrapper.getDate();
+                        WebElement tournamentElement = tournamentWrapper.getTournament();
+                        WebElement country = tournamentElement.findElement(By.className("country_part"));
+                        WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
+                        List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
+                        for (WebElement event : eventElements) {
+                            String fixtureUrl = fixtureUrl(date, tournament, country, event);
+                            System.out.println(fixtureUrl);
+                        }
                     }
                 }
             });
