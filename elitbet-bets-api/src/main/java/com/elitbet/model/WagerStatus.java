@@ -1,4 +1,4 @@
-package com.elitbet.domain;
+package com.elitbet.model;
 
 public enum WagerStatus {
     NO_STATUS,

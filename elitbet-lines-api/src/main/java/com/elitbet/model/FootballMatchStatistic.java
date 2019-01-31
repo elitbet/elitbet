@@ -1,4 +1,4 @@
-package com.elitbet.domain;
+package com.elitbet.model;
 
 import javax.persistence.*;
 import java.util.LinkedHashMap;

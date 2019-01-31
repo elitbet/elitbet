@@ -1,4 +1,4 @@
-package com.elitbet.domain;
+package com.elitbet.model;
 
 enum OutcomeStatus{
     NO_STATUS,

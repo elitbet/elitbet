@@ -1,4 +1,4 @@
-package com.elitbet.domain;
+package com.elitbet.model;
 
 public enum EventStatus{
     NOT_STARTED,
