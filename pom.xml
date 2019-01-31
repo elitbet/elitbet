@@ -14,7 +14,6 @@
         <module>elitbet-lines-api</module>
         <module>elitbet-bets-api</module>
         <module>elitbet-web</module>
-        <module>elitbet-domain</module>
     </modules>
 
     <build>
