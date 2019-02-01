@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 @Service
 public class FootballStatisticService extends FootballService {
 
-    private final int THREADS_COUNT = 1000;
+    private final int THREADS_COUNT = 100;
 
     private Queue<StatisticWrapper> statisticWrappers = new ConcurrentLinkedQueue<>();
 
@@ -33,7 +33,7 @@ public class FootballStatisticService extends FootballService {
         }
     }
 
-    protected void runExecutorService(){
+    protected void runElementExecutorService(){
         ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
         for(int i=0;i<THREADS_COUNT;i++){
             executorService.execute(() -> {
@@ -46,7 +46,9 @@ public class FootballStatisticService extends FootballService {
                         WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
                         List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
                         for (WebElement event : eventElements) {
-                            String statisticUrl = statisticUrl(date, tournament, country, event);
+                            FootballStatistic statistic = getStatistic(date, tournament, country, event);
+                            urls.add(statistic.toURL());
+                            System.out.println("operation: + " +"size: " + urls.size());
                         }
                     } else {
                         try {
@@ -65,7 +67,7 @@ public class FootballStatisticService extends FootballService {
         return statisticWrappers.isEmpty();
     }
 
-    private String statisticUrl(WebElement date, WebElement tournament, WebElement country, WebElement event){
+    private FootballStatistic getStatistic(WebElement date, WebElement tournament, WebElement country, WebElement event){
 
         FootballStatistic statistic = new FootballStatistic();
         statistic.setId(event.getAttribute("id"));
@@ -85,7 +87,7 @@ public class FootballStatisticService extends FootballService {
         statistic.setHomeTeamFirstHalfGoals(firstHalfScore[0]);
         statistic.setAwayTeamFirstHalfGoals(firstHalfScore[1]);
 
-        return statistic.toURL();
+        return statistic;
     }
 
     private int[] parseScore(String scoreString){

@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +18,13 @@ import java.util.concurrent.Executors;
 public class FootballOddsService extends FootballService {
 
     // TODO: 01.02.19 set in properties
-    private final int THREADS_COUNT = 5;
+    private final int THREADS_COUNT = 1;
 
     private Queue<String> eventIdList = new ConcurrentLinkedQueue<>();
 
 
     @Override
-    protected void runExecutorService() {
+    protected void runElementExecutorService() {
         ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
         for(int i=0;i<THREADS_COUNT;i++){
             executorService.execute(() -> {
@@ -33,17 +35,18 @@ public class FootballOddsService extends FootballService {
                         String windowUrl = basicUrl + "match/" + id.replace("g_1_","");
                         System.out.println(windowUrl);
                         driver.get(windowUrl);
-//                        WebElement oddsWindow = driver.findElement(By.id("a-match-odds-comparison"));
-//                        oddsWindow.click();
-//                        List<WebElement> bookmakers = driver.findElements(By.xpath("//tbody/tr[1]/td[1]/div[1]/a"));
-//                        bookmakers.forEach(bookmaker -> System.out.println(bookmaker.getText()));
-                        try {
-                            String firstWin = driver.findElement(By.className("0_1")).getText();
-                            String draw = driver.findElement(By.className("o_0")).getText();
-                            String secondWin = driver.findElement(By.className("o_2")).getText();
-                            System.out.println("1:" + firstWin + ";X:" +  draw + ";2:" +  secondWin);
-                        }catch (Exception ignored){}
 
+                        WebDriverWait wait = new WebDriverWait(driver,10);
+                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("a-match-odds-comparison")));
+//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-ft")));
+//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-1hf")));
+//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-2hf")));
+                        WebElement oddsWindow = driver.findElement(By.id("a-match-odds-comparison"));
+                        oddsWindow.click();
+
+                        load_1x2_FullTime_Odds(driver);
+                        load_1x2_1stHalf_Odds(driver);
+                        load_1x2_2ndHalf_Odds(driver);
                     } else {
                         try {
                             Thread.sleep(THREAD_SLEEP_MILLIS);
@@ -54,6 +57,124 @@ public class FootballOddsService extends FootballService {
                     }
                 }
             });
+        }
+    }
+
+    private void load_1x2_FullTime_Odds(WebDriver driver){
+
+        System.out.println("1x2_FullTime");
+
+        WebElement button;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("bookmark-1x2-ft")));
+            button = driver.findElement(By.id("bookmark-1x2-ft"));
+            button.click();
+        } catch (Exception e){
+            System.out.println("Can`t find button");
+            return;
+        }
+
+
+        WebElement block;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-ft")));
+            block = driver.findElement(By.id("block-1x2-ft"));
+        } catch (Exception e) {
+            System.out.println("Can`t find block-1x2-ft");
+            return;
+        }
+
+        printOdds(driver,block);
+    }
+
+    private void load_1x2_1stHalf_Odds(WebDriver driver) {
+
+        WebElement button;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("bookmark-1x2-1hf")));
+            button = driver.findElement(By.id("bookmark-1x2-1hf"));
+            button.click();
+        } catch (Exception e){
+            System.out.println("Can`t find button");
+            return;
+        }
+
+        System.out.println("1x2_1ndHalf");
+
+        WebElement block;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-1hf")));
+            block = driver.findElement(By.id("block-1x2-1hf"));
+        } catch (Exception e) {
+            System.out.println("Can`t find block-1x2-1hf");
+            return;
+        }
+
+        printOdds(driver,block);
+    }
+
+    private void load_1x2_2ndHalf_Odds(WebDriver driver){
+
+        System.out.println("1x2_2ndHalf");
+
+        WebElement button;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("bookmark-1x2-2hf")));
+            button = driver.findElement(By.id("bookmark-1x2-2hf"));
+            button.click();
+        } catch (Exception e){
+            System.out.println("Can`t find button");
+            return;
+        }
+
+        WebElement block;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-2hf")));
+            block = driver.findElement(By.id("block-1x2-2hf"));
+        } catch (Exception e) {
+            System.out.println("Can`t find block-1x2-2hf");
+            return;
+        }
+
+        printOdds(driver,block);
+    }
+
+    private void printOdds(WebDriver driver, WebElement block){
+        List<WebElement> bookmakers;
+        try {
+//            WebDriverWait wait = new WebDriverWait(driver, 10);
+//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("table/tbody/tr")));
+            bookmakers = block.findElements(By.xpath("table/tbody/tr"));
+        } catch (Exception e){
+            System.out.println("Can`t find table");
+            return;
+        }
+
+        for(WebElement bookmaker:bookmakers){
+            try {
+                String bookmakerName = bookmaker.findElement(By.className("elink")).getAttribute("title");
+                System.out.print("Bookmaker: " + bookmakerName);
+            } catch (Exception e){
+                System.out.println("Bookmaker not present ");
+            }
+
+            try {
+//                WebDriverWait wait1 = new WebDriverWait(driver, 10);
+//                wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("odds-wrap")));
+                List<WebElement> odds = bookmaker.findElements(By.className("odds-wrap"));
+                String firstWin = odds.get(0).getText();
+                String draw = odds.get(1).getText();
+                String secondWin = odds.get(2).getText();
+                System.out.println(" 1:" + firstWin + " X:" + draw + " 2:" + secondWin);
+            } catch (Exception e){
+                System.out.println(" Odds not present");
+            }
         }
     }
 
@@ -72,10 +193,6 @@ public class FootballOddsService extends FootballService {
         for(WebElement fixture:fixtures){
             String id = fixture.getAttribute("id");
             eventIdList.add(id);
-//            System.out.println("--------------------");
-//            System.out.println(fixture.getText());
-//            fixture.click();
-//            System.out.println(driver.getTitle());
         }
     }
 }

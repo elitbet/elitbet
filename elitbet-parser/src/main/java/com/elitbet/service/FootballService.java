@@ -7,10 +7,23 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public abstract class FootballService {
 
     @Autowired
     protected ChromeOptions options;
+
+    // TODO: 01.02.19 properties
+    private final int THREADS_COUNT = 100;
+
+    static Queue<String> urls = new ConcurrentLinkedQueue<>();
 
     private final int COUNT_DEFAULT = 10;
     final String basicUrl = "https://www.flashscore.com/";
@@ -19,7 +32,8 @@ public abstract class FootballService {
     private int yesterdayCount = COUNT_DEFAULT;
 
     public void run(){
-        runExecutorService();
+        runElementExecutorService();
+        //runUrlExecutorService();
         while (true){
             if(queueIsEmpty()){
                 parseFootballToday();
@@ -32,7 +46,37 @@ public abstract class FootballService {
         }
     }
 
-    protected abstract void runExecutorService();
+    void runUrlExecutorService(){
+        ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
+        for(int i=0;i<THREADS_COUNT;i++){
+            executorService.execute(()->{
+                while(true){
+                    HttpURLConnection connection;
+                    try {
+                        String urlContext = urls.poll();
+                        if(urlContext!=null){
+                            System.out.println("operation: - " +"size: " + urls.size());
+                            URL url = new URL("http://localhost:8081/parser?" + urlContext);
+//                            connection = (HttpURLConnection) url.openConnection();
+//                            connection.connect();
+//                            int responseCode = connection.getResponseCode();
+//                            System.out.println("Response code: " + responseCode);
+                        } else {
+                            try {
+                                Thread.sleep(THREAD_SLEEP_MILLIS);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    protected abstract void runElementExecutorService();
 
     protected abstract boolean queueIsEmpty();
 

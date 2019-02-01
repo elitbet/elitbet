@@ -13,9 +13,9 @@ public class Application {
     public static void main(String[] args) {
         SpringApplicationBuilder app = new SpringApplicationBuilder(Application.class).web(WebApplicationType.NONE);
         ApplicationContext context = app.run(args);
-        FootballService footballStatisticLoader = context.getBean(FootballStatisticService.class);
-        footballStatisticLoader.run();
-//        FootballService footballOddsLoader = context.getBean(FootballOddsService.class);
-//        footballOddsLoader.run();
+//        FootballService footballStatisticLoader = context.getBean(FootballStatisticService.class);
+//        footballStatisticLoader.run();
+        FootballService footballOddsLoader = context.getBean(FootballOddsService.class);
+        footballOddsLoader.run();
     }
 }
