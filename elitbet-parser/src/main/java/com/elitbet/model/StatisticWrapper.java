@@ -2,12 +2,12 @@ package com.elitbet.model;
 
 import org.openqa.selenium.WebElement;
 
-public class TournamentWrapper {
+public class StatisticWrapper {
 
     private WebElement tournament;
     private WebElement date;
 
-    public TournamentWrapper(WebElement tournament, WebElement date) {
+    public StatisticWrapper(WebElement tournament, WebElement date) {
         this.tournament = tournament;
         this.date = date;
     }

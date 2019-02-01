@@ -3,7 +3,7 @@ package com.elitbet.model;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class Fixture {
+public class FootballStatistic {
 
     private String id;
     private String country;
@@ -18,7 +18,7 @@ public class Fixture {
     private int homeTeamFirstHalfGoals;
     private int awayTeamFirstHalfGoals;
 
-    public Fixture() {}
+    public FootballStatistic() {}
 
     public String getId() {
         return id;
@@ -118,7 +118,7 @@ public class Fixture {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Fixture{");
+        final StringBuilder sb = new StringBuilder("FootballStatistic{");
         sb.append("id='").append(id).append('\'');
         sb.append(", country='").append(country).append('\'');
         sb.append(", tournament='").append(tournament).append('\'');
