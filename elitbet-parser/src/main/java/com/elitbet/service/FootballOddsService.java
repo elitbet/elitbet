@@ -1,5 +1,8 @@
 package com.elitbet.service;
 
+import com.elitbet.model.OddsContainer;
+import com.elitbet.model.odds.Odd;
+import com.elitbet.model.odds.Odd_1x2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,10 +23,9 @@ import java.util.concurrent.Executors;
 public class FootballOddsService extends FootballService {
 
     // TODO: 01.02.19 set in properties
-    private final int THREADS_COUNT = 1;
+    private final int THREADS_COUNT = 5;
 
-    private Queue<String> eventIdList = new ConcurrentLinkedQueue<>();
-
+    private Queue<String> eventIdQueue = new ConcurrentLinkedQueue<>();
 
     @Override
     protected void runElementExecutorService() {
@@ -30,23 +34,29 @@ public class FootballOddsService extends FootballService {
             executorService.execute(() -> {
                 WebDriver driver = new ChromeDriver(options);
                 while(true) {
-                    String id = eventIdList.poll();
+                    String id = eventIdQueue.poll();
                     if (id != null) {
                         String windowUrl = basicUrl + "match/" + id.replace("g_1_","");
-                        System.out.println(windowUrl);
                         driver.get(windowUrl);
 
-                        WebDriverWait wait = new WebDriverWait(driver,10);
-                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("a-match-odds-comparison")));
-//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-ft")));
-//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-1hf")));
-//                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-2hf")));
-                        WebElement oddsWindow = driver.findElement(By.id("a-match-odds-comparison"));
-                        oddsWindow.click();
+                        WebElement oddsWindow;
+                        try {
+                            WebDriverWait wait = new WebDriverWait(driver,10);
+                            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("a-match-odds-comparison")));
+                            oddsWindow = driver.findElement(By.id("a-match-odds-comparison"));
+                            oddsWindow.click();
 
-                        load_1x2_FullTime_Odds(driver);
-                        load_1x2_1stHalf_Odds(driver);
-                        load_1x2_2ndHalf_Odds(driver);
+                            List<Odd> oddList = new LinkedList<>();
+                            oddList.addAll(load_1x2_FullTime_Odds(driver));
+                            oddList.addAll(load_1x2_1stHalf_Odds(driver));
+                            oddList.addAll(load_1x2_2ndHalf_Odds(driver));
+
+                            OddsContainer container = new OddsContainer();
+                            container.setId(id);
+                            container.setOdds(oddList);
+                            System.out.println(container);
+                            urls.add(container.toString());
+                        } catch (Exception ignored) {}
                     } else {
                         try {
                             Thread.sleep(THREAD_SLEEP_MILLIS);
@@ -60,9 +70,7 @@ public class FootballOddsService extends FootballService {
         }
     }
 
-    private void load_1x2_FullTime_Odds(WebDriver driver){
-
-        System.out.println("1x2_FullTime");
+    private List<Odd> load_1x2_FullTime_Odds(WebDriver driver){
 
         WebElement button;
         try {
@@ -71,8 +79,7 @@ public class FootballOddsService extends FootballService {
             button = driver.findElement(By.id("bookmark-1x2-ft"));
             button.click();
         } catch (Exception e){
-            System.out.println("Can`t find button");
-            return;
+            return new ArrayList<>();
         }
 
 
@@ -82,14 +89,13 @@ public class FootballOddsService extends FootballService {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-ft")));
             block = driver.findElement(By.id("block-1x2-ft"));
         } catch (Exception e) {
-            System.out.println("Can`t find block-1x2-ft");
-            return;
+            return new ArrayList<>();
         }
 
-        printOdds(driver,block);
+        return loadOdds(block);
     }
 
-    private void load_1x2_1stHalf_Odds(WebDriver driver) {
+    private List<Odd> load_1x2_1stHalf_Odds(WebDriver driver) {
 
         WebElement button;
         try {
@@ -98,11 +104,8 @@ public class FootballOddsService extends FootballService {
             button = driver.findElement(By.id("bookmark-1x2-1hf"));
             button.click();
         } catch (Exception e){
-            System.out.println("Can`t find button");
-            return;
+            return new ArrayList<>();
         }
-
-        System.out.println("1x2_1ndHalf");
 
         WebElement block;
         try {
@@ -110,16 +113,13 @@ public class FootballOddsService extends FootballService {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-1hf")));
             block = driver.findElement(By.id("block-1x2-1hf"));
         } catch (Exception e) {
-            System.out.println("Can`t find block-1x2-1hf");
-            return;
+            return new ArrayList<>();
         }
 
-        printOdds(driver,block);
+        return loadOdds(block);
     }
 
-    private void load_1x2_2ndHalf_Odds(WebDriver driver){
-
-        System.out.println("1x2_2ndHalf");
+    private List<Odd> load_1x2_2ndHalf_Odds(WebDriver driver){
 
         WebElement button;
         try {
@@ -128,8 +128,7 @@ public class FootballOddsService extends FootballService {
             button = driver.findElement(By.id("bookmark-1x2-2hf"));
             button.click();
         } catch (Exception e){
-            System.out.println("Can`t find button");
-            return;
+            return new ArrayList<>();
         }
 
         WebElement block;
@@ -138,49 +137,55 @@ public class FootballOddsService extends FootballService {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("block-1x2-2hf")));
             block = driver.findElement(By.id("block-1x2-2hf"));
         } catch (Exception e) {
-            System.out.println("Can`t find block-1x2-2hf");
-            return;
+            return new ArrayList<>();
         }
 
-        printOdds(driver,block);
+        return loadOdds(block);
     }
 
-    private void printOdds(WebDriver driver, WebElement block){
-        List<WebElement> bookmakers;
+    private List<Odd> loadOdds(WebElement block){
+
+        List<Odd> oddList = new LinkedList<>();
+
+        List<WebElement> oddTable;
         try {
-//            WebDriverWait wait = new WebDriverWait(driver, 10);
-//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("table/tbody/tr")));
-            bookmakers = block.findElements(By.xpath("table/tbody/tr"));
+            oddTable = block.findElements(By.xpath("table/tbody/tr"));
         } catch (Exception e){
-            System.out.println("Can`t find table");
-            return;
+            return oddList;
         }
 
-        for(WebElement bookmaker:bookmakers){
+        for(WebElement oddRaw:oddTable){
+
+            Odd_1x2 odd;
+
+            String bookmaker;
             try {
-                String bookmakerName = bookmaker.findElement(By.className("elink")).getAttribute("title");
-                System.out.print("Bookmaker: " + bookmakerName);
-            } catch (Exception e){
-                System.out.println("Bookmaker not present ");
+                bookmaker = oddRaw.findElement(By.className("elink")).getAttribute("title");
+            } catch (Exception ignored){
+                break;
             }
 
             try {
-//                WebDriverWait wait1 = new WebDriverWait(driver, 10);
-//                wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("odds-wrap")));
-                List<WebElement> odds = bookmaker.findElements(By.className("odds-wrap"));
-                String firstWin = odds.get(0).getText();
-                String draw = odds.get(1).getText();
-                String secondWin = odds.get(2).getText();
-                System.out.println(" 1:" + firstWin + " X:" + draw + " 2:" + secondWin);
+                List<WebElement> odds = oddRaw.findElements(By.className("odds-wrap"));
+                double firstWin = Double.parseDouble(odds.get(0).getText());
+                double draw = Double.parseDouble(odds.get(1).getText());
+                double secondWin = Double.parseDouble(odds.get(2).getText());
+                odd = new Odd_1x2(bookmaker,firstWin,draw,secondWin);
             } catch (Exception e){
-                System.out.println(" Odds not present");
+                break;
             }
+
+            oddList.add(odd);
         }
+
+        return oddList;
     }
+
+
 
     @Override
     protected boolean queueIsEmpty() {
-        return eventIdList.isEmpty();
+        return eventIdQueue.isEmpty();
     }
 
     @Override
@@ -188,11 +193,11 @@ public class FootballOddsService extends FootballService {
         loadOdds(driver);
     }
 
-    public void loadOdds(WebDriver driver){
+    private void loadOdds(WebDriver driver){
         List<WebElement> fixtures = driver.findElements(By.xpath("//div/table/tbody/tr"));
         for(WebElement fixture:fixtures){
             String id = fixture.getAttribute("id");
-            eventIdList.add(id);
+            eventIdQueue.add(id);
         }
     }
 }

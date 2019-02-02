@@ -33,7 +33,7 @@ public abstract class FootballService {
 
     public void run(){
         runElementExecutorService();
-        //runUrlExecutorService();
+        runUrlExecutorService();
         while (true){
             if(queueIsEmpty()){
                 parseFootballToday();
@@ -57,10 +57,6 @@ public abstract class FootballService {
                         if(urlContext!=null){
                             System.out.println("operation: - " +"size: " + urls.size());
                             URL url = new URL("http://localhost:8081/parser?" + urlContext);
-//                            connection = (HttpURLConnection) url.openConnection();
-//                            connection.connect();
-//                            int responseCode = connection.getResponseCode();
-//                            System.out.println("Response code: " + responseCode);
                         } else {
                             try {
                                 Thread.sleep(THREAD_SLEEP_MILLIS);
