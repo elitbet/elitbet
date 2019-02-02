@@ -17,6 +17,17 @@
         <module>elitbet-resource-server</module>
     </modules>
 
+    <properties>
+        <!--<spring.version>2.0.4.RELEASE</spring.version>-->
+    </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.4.RELEASE</version>
+        <relativePath/>
+    </parent>
+
     <build>
         <plugins>
             <plugin>
@@ -30,8 +41,5 @@
         </plugins>
     </build>
 
-    <properties>
-        <spring.version>2.0.3.RELEASE</spring.version>
-    </properties>
 
 </project>
