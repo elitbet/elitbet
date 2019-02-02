@@ -1,7 +1,7 @@
 package com.elitbet.controller;
 
-import com.elitbet.entities.User;
-import com.elitbet.model.UserDTO;
+import com.elitbet.model.entities.User;
+import com.elitbet.model.dto.UserDTO;
 import com.elitbet.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

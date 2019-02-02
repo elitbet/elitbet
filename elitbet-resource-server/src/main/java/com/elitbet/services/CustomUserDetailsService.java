@@ -33,9 +33,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 u.getUsername(),
                 u.getPassword(),
                 u.isActive(),
-                u.isActive(),
-                u.isActive(),
-                u.isActive(),
+                !u.isAccountExprired(),
+                !u.isCredentialsExprired(),
+                !u.isAccountLocked(),
                 AuthorityUtils.createAuthorityList(
                         u.getRoles()
                                 .stream()

@@ -1,12 +1,13 @@
-package com.elitbet.model;
+package com.elitbet.model.dto;
 
-import com.elitbet.entities.User;
+import com.elitbet.model.entities.User;
 
 public class UserDTO {
     private Long id;
     private String username;
     private String password;
     private String language;
+    private String surname;
 
     public UserDTO() {
     }
@@ -43,6 +44,14 @@ public class UserDTO {
         this.language = language;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -56,8 +65,9 @@ public class UserDTO {
     public User toEntity() {
         User user = new User();
         user.setUsername(username);
-        user.setActive(true);
         user.setPassword(password);
+        user.setLanguage(language);
+        user.setSurname(surname);
         return user;
     }
 }

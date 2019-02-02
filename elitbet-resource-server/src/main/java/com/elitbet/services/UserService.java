@@ -1,8 +1,8 @@
 package com.elitbet.services;
 
-import com.elitbet.entities.User;
+import com.elitbet.model.entities.User;
 import com.elitbet.repositories.RoleRepository;
-import com.elitbet.entities.Role;
+import com.elitbet.model.entities.Role;
 import com.elitbet.exceptions.SuchUserAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +30,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepository.findById(1L).get();
         user.setRoles(Arrays.asList(role));
+        user.setActive(true);
+        user.setAccountExprired(false);
+        user.setAccountLocked(false);
+        user.setCredentialsExprired(false);
         userRepository.save(user);
     }
 }

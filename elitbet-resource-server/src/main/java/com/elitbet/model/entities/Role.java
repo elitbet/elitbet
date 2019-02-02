@@ -1,4 +1,4 @@
-package com.elitbet.entities;
+package com.elitbet.model.entities;
 
 import javax.persistence.*;
 
@@ -36,7 +36,6 @@ public class Role implements Serializable {
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;

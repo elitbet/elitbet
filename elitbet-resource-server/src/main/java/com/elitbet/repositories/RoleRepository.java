@@ -1,6 +1,6 @@
 package com.elitbet.repositories;
 
-import com.elitbet.entities.Role;
+import com.elitbet.model.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

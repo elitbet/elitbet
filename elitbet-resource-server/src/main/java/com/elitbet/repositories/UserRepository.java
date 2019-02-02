@@ -1,6 +1,6 @@
 package com.elitbet.repositories;
 
-import com.elitbet.entities.User;
+import com.elitbet.model.entities.User;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
