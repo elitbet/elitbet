@@ -7,13 +7,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 class FootballStatisticService {
 
     private Statistic loadStatistic(WebDriver driver){
 
-        WebElement fletf = driver.findElement(By.className("fletf"));
-        String tournament = fletf.getText();
+        WebElement fleft = driver.findElement(By.className("fleft"));
+        String tournament = fleft.getText();
 
         WebElement utime = driver.findElement(By.id("utime"));
         String startTime = utime.getText();
@@ -34,18 +36,30 @@ class FootballStatisticService {
         WebElement nameAway = driver.findElement(By.className("tname-away"));
         String teamAwayName = nameAway.getText();
 
-        WebElement p1_home = driver.findElement(By.className("p1_home"));
-        WebElement p1_away = driver.findElement(By.className("p1_away"));
-        WebElement p2_home = driver.findElement(By.className("p2_home"));
-        WebElement p2_away = driver.findElement(By.className("p2_away"));
+        int homeTeamFirstHalfGoals = 0, awayTeamFirstHalfGoals = 0;
+        try {
+            WebElement p1_home = driver.findElement(By.className("p1_home"));
+            WebElement p1_away = driver.findElement(By.className("p1_away"));
+            homeTeamFirstHalfGoals = Integer.valueOf(p1_home.getText());
+            awayTeamFirstHalfGoals = Integer.valueOf(p1_away.getText());
+        } catch (Exception ignored) {}
 
-        int homeTeamFirstHalfGoals = Integer.valueOf(p1_home.getText());
-        int awayTeamFirstHalfGoals = Integer.valueOf(p1_away.getText());
-        int homeTeamSecondHalfGoals = Integer.valueOf(p2_home.getText());
-        int awayTeamSecondHalfGoals = Integer.valueOf(p2_away.getText());
+        int homeTeamSecondHalfGoals = 0, awayTeamSecondHalfGoals = 0;
+        try {
+            WebElement p2_home = driver.findElement(By.className("p2_home"));
+            WebElement p2_away = driver.findElement(By.className("p2_away"));
+            homeTeamSecondHalfGoals = Integer.valueOf(p2_home.getText());
+            awayTeamSecondHalfGoals = Integer.valueOf(p2_away.getText());
+        } catch (Exception ignored) {}
 
-        int homeTeamFullTimeGoals = homeTeamFirstHalfGoals + homeTeamSecondHalfGoals;
-        int awayTeamFullTimeGoals = awayTeamFirstHalfGoals + awayTeamSecondHalfGoals;
+
+        int homeTeamFullTimeGoals = 0, awayTeamFullTimeGoals = 0;
+        try {
+            List<WebElement> scoreboard = driver.findElements(By.className("scoreboard"));
+            System.out.println("Scoreboard size: " + scoreboard.size());
+            homeTeamFullTimeGoals = Integer.parseInt(scoreboard.get(0).getText());
+            awayTeamFullTimeGoals = Integer.parseInt(scoreboard.get(1).getText());
+        } catch (Exception ignored) {}
 
         return new FootballStatistic
                 (statistic, teamHomeName, teamAwayName, homeTeamFullTimeGoals,

@@ -1,35 +1,35 @@
 package com.elitbet.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "request", schema = "parser")
+@Table(name = "request")
 public class Request {
 
+    @Id
     @Column(name = "event_id")
     private String eventId;
 
     @Column(name = "priority")
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    @Column(name = "1x2_full_time")
+    @Column(name = "load_1x2_full_time")
     private boolean load_1x2_FullTime;
 
-    @Column(name = "1x2_first_half")
+    @Column(name = "load_1x2_first_half")
     private boolean load_1x2_FirstHalf;
 
-    @Column(name = "1x2_second_half")
+    @Column(name = "load_1x2_second_half")
     private boolean load_1x2_SecondHalf;
 
-    @Column(name = "over_under_full_time")
+    @Column(name = "load_over_under_full_time")
     private boolean load_OverUnder_FullTime;
 
-    @Column(name = "over_under_first_half")
+    @Column(name = "load_over_under_first_half")
     private boolean load_OverUnder_FirstHalf;
 
-    @Column(name = "over_under_second_half")
+    @Column(name = "load_over_under_second_half")
     private boolean load_OverUnder_SecondHalf;
 
     public Request() {
