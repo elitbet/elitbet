@@ -20,11 +20,7 @@ public abstract class FootballService {
 
     protected Queue<String> urls = new ConcurrentLinkedQueue<>();
 
-    private final int COUNT_DEFAULT = 10;
     final String basicUrl = "https://www.flashscore.com/";
-
-    private int tomorrowCount = COUNT_DEFAULT;
-    private int yesterdayCount = COUNT_DEFAULT;
 
     public void run(){
         while (true){
@@ -42,19 +38,17 @@ public abstract class FootballService {
 
     private void parseFootballToday(){
         WebDriver driver = new ChromeDriver(options);
+        // TODO: 04.02.19 set wait for tommorrow window
         driver.get(basicUrl);
-        loadElements(driver);
-        if(tomorrowCount-- < 0){
-            parseFootballTomorrow(driver);
-            tomorrowCount = COUNT_DEFAULT;
-        }else if(yesterdayCount-- < 0){
-            parseFootballYesterday(driver);
-            yesterdayCount = COUNT_DEFAULT;
-        }
+        parseFootballTomorrow(driver);
+//        loadElements(driver);
+//        for(int i=0;i<6;i++){
+//            parseFootballTomorrow(driver);
+//        }
         driver.close();
     }
 
-    void clickElement(WebDriver driver, By by) throws Exception {
+    private void clickElement(WebDriver driver, By by) throws Exception {
         WebElement button = loadElement(driver, by);
         button.click();
     }
@@ -63,15 +57,6 @@ public abstract class FootballService {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         return driver.findElement(by);
-    }
-
-    private void parseFootballYesterday(WebDriver driver){
-        try {
-            clickElement(driver, By.className("yesterday"));
-            loadElements(driver);
-        } catch (Exception e) {
-            System.out.println("Yesterday page not loaded");
-        }
     }
 
     private void parseFootballTomorrow(WebDriver driver){
