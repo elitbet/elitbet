@@ -6,6 +6,8 @@ import com.elitbet.events.parser.model.TournamentWrapper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -20,32 +22,72 @@ public class FootballStatisticService extends FootballService {
         loadTournaments(driver);
     }
 
-    private void loadTournaments(WebDriver driver){
+    private void loadTournaments(WebDriver driver) {
+
         WebElement date;
         try {
-            date = loadElement(driver, By.className("today"));
+            date = loadDateElement(driver);
         } catch (Exception e) {
             System.out.println("Today web element not loaded");
             return;
         }
-//        WebDriverWait wait = new WebDriverWait(driver, 10);
-//        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("//div/table"),50));
-        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
-        List<WebElement> tournaments = driver.findElements(By.xpath("//div/table"));
+
+        List<WebElement> tournaments;
+        try {
+            tournaments = loadTournamentElements(driver);
+        } catch (Exception e){
+            System.out.println("Problem loading tournaments");
+            return;
+        }
+
+        List<TournamentWrapper> tournamentWrappers;
+        try {
+            tournamentWrappers = loadTournamentWrappers(tournaments, date);
+        } catch (Exception e){
+            System.out.println("Problem loading wrappers");
+            return;
+        }
+
+        Queue<TournamentWrapper> tournamentWrappersQueue = new ConcurrentLinkedQueue<>(tournamentWrappers);
+
+        System.out.println("Well done");
+
+        try {
+            runTournamentExecutorService(tournamentWrappersQueue);
+        } catch (Exception e){
+            System.out.println("Error in executor service");
+            e.printStackTrace();
+        }
+    }
+
+    private WebElement loadDateElement(WebDriver driver) throws Exception {
+        WebElement date = loadElement(driver, By.className("today"));
+        System.out.println(date.getText());
+        return date;
+    }
+
+    private List<WebElement> loadTournamentElements(WebDriver driver){
+        WebDriverWait wait = new WebDriverWait(driver,10);
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(".table-main>.soccer"),1));
+
+        List<WebElement> tournaments = driver.findElements(By.className("soccer"));
         System.out.println(tournaments.size());
+        return tournaments;
+    }
+
+    private List<TournamentWrapper> loadTournamentWrappers(List<WebElement> tournamentElements, WebElement dateElement) throws Exception{
         LocalTime now = LocalTime.now();
         List<TournamentWrapper> tournamentWrappers = new LinkedList<>();
-        for(WebElement tournament:tournaments){
-            TournamentWrapper wrapper = new TournamentWrapper(tournament, date, now);
+        for (WebElement tournament : tournamentElements) {
+            TournamentWrapper wrapper = new TournamentWrapper(tournament, dateElement, now);
             tournamentWrappers.add(wrapper);
-            System.out.println(date.getText());
         }
-        Queue<TournamentWrapper> tournamentWrappersQueue = new ConcurrentLinkedQueue<>(tournamentWrappers);
-        runTournamentExecutorService(tournamentWrappersQueue);
+        return tournamentWrappers;
     }
 
     private void runTournamentExecutorService(Queue<TournamentWrapper> tournamentWrappers){
         int threadNumber = 5;
+        System.out.println("Tournament wrappers: " + tournamentWrappers.size());
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         List<Callable<Void>> creators = new ArrayList<>();
         Queue<EventWrapper> eventWrappers = new ConcurrentLinkedQueue<>();
@@ -59,6 +101,7 @@ public class FootballStatisticService extends FootballService {
                         WebElement country = tournamentElement.findElement(By.className("country_part"));
                         WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
                         List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
+                        System.out.println("Event Elements: " + eventElements.size());
                         LocalTime update = tournamentWrapper.getUpdate();
                         for(WebElement eventElement:eventElements){
                             eventWrappers.add(new EventWrapper(tournament,date, country, eventElement, update));
@@ -72,6 +115,7 @@ public class FootballStatisticService extends FootballService {
         }
         try {
             executorService.invokeAll(creators);
+            System.out.println("Event Wrappers: " + eventWrappers.size());
             runEventExecutorService(eventWrappers);
         } catch (InterruptedException e) {
             e.printStackTrace();

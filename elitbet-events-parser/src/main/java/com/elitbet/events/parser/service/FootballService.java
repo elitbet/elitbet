@@ -1,11 +1,13 @@
 package com.elitbet.events.parser.service;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,12 +53,21 @@ public abstract class FootballService {
     private void clickElement(WebDriver driver, By by) throws Exception {
         WebElement button = loadElement(driver, by);
         button.click();
+        WebDriverWait wait = new WebDriverWait(driver,10);
+        System.out.println("wait before click button");
+        wait.until(ExpectedConditions.attributeToBe(By.id("preload"),"style","display: none;"));
+        System.out.println("loaded after clckking button");
+        System.out.println("Clicked " + by.toString());
     }
 
     WebElement loadElement(WebDriver driver, By by) throws Exception{
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-        return driver.findElement(by);
+        System.out.println("before wait");
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(".table-main>.soccer"),1));
+        System.out.println("after watt");
+        WebElement element = driver.findElement(by);
+        System.out.println("Loading " + by.toString());
+        return element;
     }
 
     private void parseFootballTomorrow(WebDriver driver){
