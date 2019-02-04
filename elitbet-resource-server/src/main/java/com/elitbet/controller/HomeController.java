@@ -26,7 +26,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/private")
-    @PreAuthorize("#oauth2.hasScope('write')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') and #oauth2.hasScope('write')")
     public String privateArea(Authentication authentication){
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         StringBuilder sb = new StringBuilder();
