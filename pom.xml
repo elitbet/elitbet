@@ -21,6 +21,7 @@
     <properties>
         <selenium.version>3.141.59</selenium.version>
         <mysql-connector.version>5.1.46</mysql-connector.version>
+        <spring-cloud.version>Finchley.SR1</spring-cloud.version>
     </properties>
 
     <parent>
