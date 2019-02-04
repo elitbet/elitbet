@@ -1,6 +1,6 @@
 package com.elitbet.service;
 
-import com.elitbet.model.EventRequest;
+import com.elitbet.model.Request;
 import com.elitbet.model.odds.Odd;
 import com.elitbet.model.odds.Odd_1x2;
 import com.elitbet.model.odds.Odd_OverUnder;
@@ -16,7 +16,10 @@ import java.util.List;
 @Service
 class FootballOddsService implements SeleniumInterface {
 
-    List<Odd> loadOdds(WebDriver driver, EventRequest request) {
+    List<Odd> loadOdds(WebDriver driver, Request request) throws Exception {
+
+        clickElement(driver, By.id("a-match-odds-comparison"));
+
         List<Odd> oddList = new LinkedList<>();
         if(request.isLoad_1x2_FullTime()){
             oddList.addAll(load_1x2_FullTime_Odds(driver));

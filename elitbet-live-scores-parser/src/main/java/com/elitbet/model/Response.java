@@ -7,17 +7,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class EventResponse {
+public class Response {
 
     private String eventId;
     private Statistic statistic;
     private List<Odd> oddList;
     private LocalTime update;
 
-    public EventResponse() {
+    public Response() {
     }
 
-    public EventResponse(String eventId, Statistic statistic, List<Odd> oddList, LocalTime update) {
+    public Response(String eventId, Statistic statistic, List<Odd> oddList, LocalTime update) {
         this.eventId = eventId;
         this.statistic = statistic;
         this.oddList = oddList;
@@ -62,7 +62,7 @@ public class EventResponse {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("EventResponse{");
+        final StringBuilder sb = new StringBuilder("Response{");
         sb.append("eventId='").append(eventId).append('\'');
         sb.append(", statistic=").append(statistic);
         sb.append(", oddList=").append(oddList);

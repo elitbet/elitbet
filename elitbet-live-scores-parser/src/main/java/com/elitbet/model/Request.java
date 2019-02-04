@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "event")
-public class EventRequest {
+@Table(name = "request", schema = "parser")
+public class Request {
 
     @Column(name = "event_id")
     private String eventId;
@@ -32,7 +32,7 @@ public class EventRequest {
     @Column(name = "over_under_second_half")
     private boolean load_OverUnder_SecondHalf;
 
-    public EventRequest() {
+    public Request() {
     }
 
     public String getEventId() {
