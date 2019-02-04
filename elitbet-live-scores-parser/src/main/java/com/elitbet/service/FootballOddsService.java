@@ -14,9 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class FootballOddsService implements SeleniumInterface {
+class FootballOddsService implements SeleniumInterface {
 
-    public List<Odd> loadOdds(WebDriver driver, EventRequest request) {
+    List<Odd> loadOdds(WebDriver driver, EventRequest request) {
         List<Odd> oddList = new LinkedList<>();
         if(request.isLoad_1x2_FullTime()){
             oddList.addAll(load_1x2_FullTime_Odds(driver));

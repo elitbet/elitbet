@@ -2,58 +2,31 @@ package com.elitbet.model.statistic;
 
 public class FootballStatistic extends Statistic {
 
-    private String country;
-    private String tournament;
-    private String date;
-    private String startTime;
-    private String status;
     private String homeTeamName;
     private String awayTeamName;
-    private int homeTeamGoals;
-    private int awayTeamGoals;
+    private int homeTeamFullTimeGoals;
+    private int awayTeamFullTimeGoals;
     private int homeTeamFirstHalfGoals;
     private int awayTeamFirstHalfGoals;
+    private int homeTeamSecondHalfGoals;
+    private int awayTeamSecondHalfGoals;
 
-    public FootballStatistic() {}
 
-    public String getCountry() {
-        return country;
-    }
+    public FootballStatistic(Statistic statistic, String homeTeamName, String awayTeamName,
+                             int homeTeamFullTimeGoals, int awayTeamFullTimeGoals, int homeTeamFirstHalfGoals,
+                             int awayTeamFirstHalfGoals, int homeTeamSecondHalfGoals, int awayTeamSecondHalfGoals) {
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(String tournament) {
-        this.tournament = tournament;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.tournament = statistic.tournament;
+        this.status = statistic.status;
+        this.startTime = statistic.startTime;
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
+        this.homeTeamFullTimeGoals = homeTeamFullTimeGoals;
+        this.awayTeamFullTimeGoals = awayTeamFullTimeGoals;
+        this.homeTeamFirstHalfGoals = homeTeamFirstHalfGoals;
+        this.awayTeamFirstHalfGoals = awayTeamFirstHalfGoals;
+        this.homeTeamSecondHalfGoals = homeTeamSecondHalfGoals;
+        this.awayTeamSecondHalfGoals = awayTeamSecondHalfGoals;
     }
 
     public String getHomeTeamName() {
@@ -72,20 +45,20 @@ public class FootballStatistic extends Statistic {
         this.awayTeamName = awayTeamName;
     }
 
-    public int getHomeTeamGoals() {
-        return homeTeamGoals;
+    public int getHomeTeamFullTimeGoals() {
+        return homeTeamFullTimeGoals;
     }
 
-    public void setHomeTeamGoals(int homeTeamGoals) {
-        this.homeTeamGoals = homeTeamGoals;
+    public void setHomeTeamFullTimeGoals(int homeTeamFullTimeGoals) {
+        this.homeTeamFullTimeGoals = homeTeamFullTimeGoals;
     }
 
-    public int getAwayTeamGoals() {
-        return awayTeamGoals;
+    public int getAwayTeamFullTimeGoals() {
+        return awayTeamFullTimeGoals;
     }
 
-    public void setAwayTeamGoals(int awayTeamGoals) {
-        this.awayTeamGoals = awayTeamGoals;
+    public void setAwayTeamFullTimeGoals(int awayTeamFullTimeGoals) {
+        this.awayTeamFullTimeGoals = awayTeamFullTimeGoals;
     }
 
     public int getHomeTeamFirstHalfGoals() {
@@ -104,22 +77,37 @@ public class FootballStatistic extends Statistic {
         this.awayTeamFirstHalfGoals = awayTeamFirstHalfGoals;
     }
 
+    public int getHomeTeamSecondHalfGoals() {
+        return homeTeamSecondHalfGoals;
+    }
+
+    public void setHomeTeamSecondHalfGoals(int homeTeamSecondHalfGoals) {
+        this.homeTeamSecondHalfGoals = homeTeamSecondHalfGoals;
+    }
+
+    public int getAwayTeamSecondHalfGoals() {
+        return awayTeamSecondHalfGoals;
+    }
+
+    public void setAwayTeamSecondHalfGoals(int awayTeamSecondHalfGoals) {
+        this.awayTeamSecondHalfGoals = awayTeamSecondHalfGoals;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("FootballStatistic{");
-        sb.append(", country='").append(country).append('\'');
-        sb.append(", tournament='").append(tournament).append('\'');
-        sb.append(", date='").append(date).append('\'');
-        sb.append(", startTime='").append(startTime).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", homeTeamName='").append(homeTeamName).append('\'');
+        sb.append("homeTeamName='").append(homeTeamName).append('\'');
         sb.append(", awayTeamName='").append(awayTeamName).append('\'');
-        sb.append(", homeTeamGoals=").append(homeTeamGoals);
-        sb.append(", awayTeamGoals=").append(awayTeamGoals);
+        sb.append(", homeTeamFullTimeGoals=").append(homeTeamFullTimeGoals);
+        sb.append(", awayTeamFullTimeGoals=").append(awayTeamFullTimeGoals);
         sb.append(", homeTeamFirstHalfGoals=").append(homeTeamFirstHalfGoals);
         sb.append(", awayTeamFirstHalfGoals=").append(awayTeamFirstHalfGoals);
+        sb.append(", homeTeamSecondHalfGoals=").append(homeTeamSecondHalfGoals);
+        sb.append(", awayTeamSecondHalfGoals=").append(awayTeamSecondHalfGoals);
+        sb.append(", tournament='").append(tournament).append('\'');
+        sb.append(", startTime='").append(startTime).append('\'');
+        sb.append(", status='").append(status).append('\'');
         sb.append('}');
         return sb.toString();
     }
-
 }

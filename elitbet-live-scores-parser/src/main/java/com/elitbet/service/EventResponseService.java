@@ -57,7 +57,7 @@ public class EventResponseService implements SeleniumInterface {
                         try {
                             LocalTime update = LocalTime.now();
                             clickElement(driver, By.id("a-match-odds-comparison"));
-                            Statistic statistic = footballStatisticService.loadStatistic(driver);
+                            Statistic statistic = footballStatisticService.loadFootballStatistic(driver);
                             List<Odd> odds = footballOddsService.loadOdds(driver, request);
                             EventResponse response = new EventResponse(eventId, statistic, odds, update);
                             urls.add(response.toUrl());
