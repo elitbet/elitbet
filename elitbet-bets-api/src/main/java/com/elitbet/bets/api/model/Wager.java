@@ -15,9 +15,9 @@ public class Wager {
     @JoinColumn(name = "outcome_id")
     private Outcome outcome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
-    private User user;
+    private Use user;*/
 
     @Column(name = "wager_status")
     private WagerStatus wagerStatus;
@@ -47,13 +47,13 @@ public class Wager {
         this.outcome = outcome;
     }
 
-    public User getUser() {
+/*    public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
+    }*/
 
     public WagerStatus getWagerStatus() {
         return wagerStatus;
@@ -97,7 +97,7 @@ public class Wager {
         final StringBuilder sb = new StringBuilder("Wager{");
         sb.append("wagerId=").append(wagerId);
         sb.append(", outcome=").append(outcome);
-        sb.append(", user=").append(user);
+     /*   sb.append(", user=").append(user);*/
         sb.append(", wagerStatus=").append(wagerStatus);
         sb.append(", odds=").append(odds);
         sb.append(", betValue=").append(betValue);

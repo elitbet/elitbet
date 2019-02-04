@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 
-@Entity(name = "USER_")
+@Entity(name = "USER")
 public class User implements Serializable {
 
     @Id
@@ -20,8 +20,9 @@ public class User implements Serializable {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USERS_AUTHORITIES", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"))
+    @JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
     private List<Role> roles;
+
     @Column(name="ENABLED")
     private boolean active;
 
