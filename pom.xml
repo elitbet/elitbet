@@ -14,13 +14,14 @@
         <module>elitbet-lines-api</module>
         <module>elitbet-bets-api</module>
         <module>elitbet-web</module>
-        <module>elitbet-resource-server</module>
+        <module>elitbet-authorization-server</module>
         <module>elitbet-live-scores-parser</module>
     </modules>
 
     <properties>
         <selenium.version>3.141.59</selenium.version>
         <mysql-connector.version>5.1.46</mysql-connector.version>
+        <spring-cloud.version>Finchley.SR1</spring-cloud.version>
     </properties>
 
     <parent>
