@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <!--<spring.version>2.0.4.RELEASE</spring.version>-->
+        <selenium.version>3.141.59</selenium.version>
     </properties>
 
     <parent>

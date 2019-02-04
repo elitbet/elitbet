@@ -13,8 +13,6 @@ public class Odd_1x2 extends Odd{
         this.secondWin = secondWin;
     }
 
-
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Odd_1x2{");

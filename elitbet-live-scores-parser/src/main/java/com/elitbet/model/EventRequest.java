@@ -1,17 +1,38 @@
 package com.elitbet.model;
 
-public class EventOrder {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "event")
+public class EventRequest {
+
+    @Column(name = "event_id")
     private String eventId;
+
+    @Column(name = "priority")
     private Priority priority;
+
+    @Column(name = "1x2_full_time")
     private boolean load_1x2_FullTime;
+
+    @Column(name = "1x2_first_half")
     private boolean load_1x2_FirstHalf;
+
+    @Column(name = "1x2_second_half")
     private boolean load_1x2_SecondHalf;
+
+    @Column(name = "over_under_full_time")
     private boolean load_OverUnder_FullTime;
+
+    @Column(name = "over_under_first_half")
     private boolean load_OverUnder_FirstHalf;
+
+    @Column(name = "over_under_second_half")
     private boolean load_OverUnder_SecondHalf;
 
-    public EventOrder() {
+    public EventRequest() {
     }
 
     public String getEventId() {
@@ -77,6 +98,4 @@ public class EventOrder {
     public void setLoad_OverUnder_SecondHalf(boolean load_OverUnder_SecondHalf) {
         this.load_OverUnder_SecondHalf = load_OverUnder_SecondHalf;
     }
-
-
 }
