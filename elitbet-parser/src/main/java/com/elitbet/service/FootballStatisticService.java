@@ -1,24 +1,19 @@
 package com.elitbet.service;
 
 import com.elitbet.model.FootballStatistic;
-import com.elitbet.model.StatisticWrapper;
+import com.elitbet.model.EventWrapper;
+import com.elitbet.model.TournamentWrapper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.concurrent.*;
 
 @Service
 public class FootballStatisticService extends FootballService {
-
-    private final int THREADS_COUNT = 100;
-
-    private Queue<StatisticWrapper> statisticWrappers = new ConcurrentLinkedQueue<>();
 
     @Override
     public void loadElements(WebDriver driver) {
@@ -26,66 +21,88 @@ public class FootballStatisticService extends FootballService {
     }
 
     private void loadTournaments(WebDriver driver){
-        WebElement date = driver.findElement(By.xpath("//span[2]/span/a"));
-        List<WebElement> tournaments = driver.findElements(By.xpath("//div/table"));
-        for(WebElement tournament:tournaments){
-            statisticWrappers.add(new StatisticWrapper(tournament,date));
+        WebElement date;
+        try {
+            date = loadElement(driver, By.className("today"));
+        } catch (Exception e) {
+            System.out.println("Today web element not loaded");
+            return;
         }
+        List<WebElement> tournaments = driver.findElements(By.xpath("//div/table"));
+        LocalTime now = LocalTime.now();
+        List<TournamentWrapper> tournamentWrappers = new LinkedList<>();
+        for(WebElement tournament:tournaments){
+            TournamentWrapper wrapper = new TournamentWrapper(tournament, date, now);
+            tournamentWrappers.add(wrapper);
+        }
+        runTournamentExecutorService(tournamentWrappers.subList(0,50));
     }
 
-    protected void runElementExecutorService(){
-        ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
-        for(int i=0;i<THREADS_COUNT;i++){
-            executorService.execute(() -> {
-                while(true) {
-                    StatisticWrapper statisticWrapper = statisticWrappers.poll();
-                    if (statisticWrapper != null) {
-                        WebElement date = statisticWrapper.getDate();
-                        WebElement tournamentElement = statisticWrapper.getTournament();
-                        WebElement country = tournamentElement.findElement(By.className("country_part"));
-                        WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
-                        List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
-                        for (WebElement event : eventElements) {
-                            FootballStatistic statistic = getStatistic(date, tournament, country, event);
-                            urls.add(statistic.toURL());
-                            System.out.println("operation: + " +"size: " + urls.size());
-                        }
-                    } else {
-                        try {
-                            Thread.sleep(THREAD_SLEEP_MILLIS);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+    private void runTournamentExecutorService(List<TournamentWrapper> tournamentWrappers){
+        ExecutorService executorService = Executors.newFixedThreadPool(tournamentWrappers.size());
+        List<Callable<Void>> creators = new ArrayList<>();
+        Queue<EventWrapper> eventWrappers = new ConcurrentLinkedQueue<>();
+        for(TournamentWrapper tournamentWrapper:tournamentWrappers){
+            creators.add(() -> {
+                WebElement date = tournamentWrapper.getDate();
+                WebElement tournamentElement = tournamentWrapper.getTournament();
+                WebElement country = tournamentElement.findElement(By.className("country_part"));
+                WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
+                List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
+                LocalTime update = tournamentWrapper.getUpdate();
+                for(WebElement eventElement:eventElements){
+                    eventWrappers.add(new EventWrapper(tournament,date, country, eventElement, update));
                 }
+                return null;
             });
         }
+        try {
+            executorService.invokeAll(creators);
+            runEventExecutorService(eventWrappers);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    protected boolean queueIsEmpty() {
-        return statisticWrappers.isEmpty();
+
+    private void runEventExecutorService(Queue<EventWrapper> eventWrappers){
+        ExecutorService executorService = Executors.newFixedThreadPool(eventWrappers.size());
+        List<Callable<Void>> creators = new ArrayList<>();
+        for (EventWrapper wrapper : eventWrappers) {
+            creators.add(() -> {
+                FootballStatistic statistic = getStatistic(wrapper);
+                urls.add(statistic.toURL());
+                return null;
+            });
+        }
+        try {
+            executorService.invokeAll(creators);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    private FootballStatistic getStatistic(WebElement date, WebElement tournament, WebElement country, WebElement event){
+    private FootballStatistic getStatistic(EventWrapper wrapper){
 
         FootballStatistic statistic = new FootballStatistic();
-        statistic.setId(event.getAttribute("id"));
-        statistic.setDate(date.getText());
-        statistic.setTournament(tournament.getText());
-        statistic.setCountry(country.getText().replace(":",""));
-        statistic.setStartTime(event.findElement(By.cssSelector("td.time.cell_ad")).getText());
-        statistic.setStatus(event.findElement(By.cssSelector("td.timer.cell_aa")).getText());
-        statistic.setHomeTeamName(event.findElement(By.cssSelector("td.team-home.cell_ab")).getText());
-        statistic.setAwayTeamName(event.findElement(By.cssSelector("td.team-away.cell_ac")).getText());
+        statistic.setId(wrapper.getEvent().getAttribute("id"));
+        statistic.setDate(wrapper.getDate().getText());
+        statistic.setTournament(wrapper.getTournament().getText());
+        statistic.setCountry(wrapper.getCountry().getText().replace(":",""));
+        statistic.setStartTime(wrapper.getEvent().findElement(By.cssSelector("td.time.cell_ad")).getText());
+        statistic.setStatus(wrapper.getEvent().findElement(By.cssSelector("td.timer.cell_aa")).getText());
+        statistic.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText());
+        statistic.setAwayTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-away.cell_ac")).getText());
 
-        int[] score = parseScore(event.findElement(By.cssSelector("td.score.cell_sa")).getText());
+        int[] score = parseScore(wrapper.getEvent().findElement(By.cssSelector("td.score.cell_sa")).getText());
         statistic.setHomeTeamGoals(score[0]);
         statistic.setAwayTeamGoals(score[1]);
 
-        int[] firstHalfScore = parseScore(event.findElement(By.cssSelector("td.part-top.cell_sb")).getText());
+        int[] firstHalfScore = parseScore(wrapper.getEvent().findElement(By.cssSelector("td.part-top.cell_sb")).getText());
         statistic.setHomeTeamFirstHalfGoals(firstHalfScore[0]);
         statistic.setAwayTeamFirstHalfGoals(firstHalfScore[1]);
+
+        statistic.setLastUpdated(wrapper.getUpdate());
 
         return statistic;
     }
@@ -103,7 +120,6 @@ public class FootballStatisticService extends FootballService {
             score[1] = Integer.valueOf(scoreArray[1].trim());
         } catch (Exception e){
             score[0] = 0;
-            score[1] = 0;
         }
         return score;
     }

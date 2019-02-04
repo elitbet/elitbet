@@ -2,6 +2,8 @@ package com.elitbet.model;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalTime;
+import java.util.Date;
 
 public class FootballStatistic {
 
@@ -17,6 +19,7 @@ public class FootballStatistic {
     private int awayTeamGoals;
     private int homeTeamFirstHalfGoals;
     private int awayTeamFirstHalfGoals;
+    private LocalTime lastUpdated;
 
     public FootballStatistic() {}
 
@@ -116,6 +119,14 @@ public class FootballStatistic {
         this.awayTeamFirstHalfGoals = awayTeamFirstHalfGoals;
     }
 
+    public LocalTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("FootballStatistic{");
@@ -135,31 +146,35 @@ public class FootballStatistic {
         return sb.toString();
     }
 
-    public String toURL() {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            stringBuilder.
-                    append("access_token=").
-                    append(URLEncoder.encode("1", "UTF-8")).
-                    append("&start_timestamp=").
-                    append(URLEncoder.encode(String.valueOf(date), "UTF-8")).
-                    append("&parameters=home_name:").
-                    append(URLEncoder.encode(homeTeamName, "UTF-8")).
-                    append(";away_name:").
-                    append(URLEncoder.encode(awayTeamName, "UTF-8")).
-                    append(";home_goals:").
-                    append(URLEncoder.encode(String.valueOf(homeTeamGoals), "UTF-8")).
-                    append(";away_goals:").
-                    append(URLEncoder.encode(String.valueOf(awayTeamGoals), "UTF-8")).
-                    append("&tournament=").
-                    append(URLEncoder.encode(tournament, "UTF-8")).
-                    append("&status=").
-                    append(URLEncoder.encode(status,"UTF-8")).
-                    append("&id=").
-                    append(URLEncoder.encode(id,"UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return stringBuilder.toString();
+//    public String toURL() {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        try {
+//            stringBuilder.
+//                    append("access_token=").
+//                    append(URLEncoder.encode("1", "UTF-8")).
+//                    append("&start_timestamp=").
+//                    append(URLEncoder.encode(String.valueOf(date), "UTF-8")).
+//                    append("&parameters=home_name:").
+//                    append(URLEncoder.encode(homeTeamName, "UTF-8")).
+//                    append(";away_name:").
+//                    append(URLEncoder.encode(awayTeamName, "UTF-8")).
+//                    append(";home_goals:").
+//                    append(URLEncoder.encode(String.valueOf(homeTeamGoals), "UTF-8")).
+//                    append(";away_goals:").
+//                    append(URLEncoder.encode(String.valueOf(awayTeamGoals), "UTF-8")).
+//                    append("&tournament=").
+//                    append(URLEncoder.encode(tournament, "UTF-8")).
+//                    append("&status=").
+//                    append(URLEncoder.encode(status,"UTF-8")).
+//                    append("&id=").
+//                    append(URLEncoder.encode(id,"UTF-8"));
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        return stringBuilder.toString();
+//    }
+
+    public String toURL(){
+        return "URL ID=" + id + " time=" + lastUpdated;
     }
 }
