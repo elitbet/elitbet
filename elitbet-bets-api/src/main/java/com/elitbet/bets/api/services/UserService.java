@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -36,5 +37,9 @@ public class UserService {
         user.setAccountLocked(false);
         user.setCredentialsExprired(false);
         userRepository.save(user);
+    }
+
+    public User getByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(()->new NoSuchElementException("No such user exists"));
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class OutcomeDTO {
 
-    private Long outcomeId;
+    private long outcomeId;
 
 
     private OutcomeStatus outcomeStatus;
@@ -20,17 +20,20 @@ public class OutcomeDTO {
 
     private List<WagerDTO> wagerDTOS;
 
+    public OutcomeDTO() {
+    }
+
     public OutcomeDTO(Outcome outcome) {
         this.outcomeId = outcome.getOutcomeId();
         this.outcomeStatus = outcome.getOutcomeStatus();
         wagerDTOS = outcome.getWagerList().stream().map(WagerDTO::new).collect(Collectors.toList());
     }
 
-    public Long getOutcomeId() {
+    public long getOutcomeId() {
         return outcomeId;
     }
 
-    public void setOutcomeId(Long outcomeId) {
+    public void setOutcomeId(long outcomeId) {
         this.outcomeId = outcomeId;
     }
 

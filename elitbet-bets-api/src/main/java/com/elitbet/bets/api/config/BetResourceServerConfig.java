@@ -30,6 +30,7 @@ public class BetResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
             .authorizeRequests()
                 .antMatchers("/help").permitAll()
+                .antMatchers("/bets").permitAll()
                 .anyRequest().authenticated();
     }
     @Override

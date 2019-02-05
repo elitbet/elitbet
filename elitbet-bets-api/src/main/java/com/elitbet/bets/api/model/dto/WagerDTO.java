@@ -10,21 +10,21 @@ import javax.persistence.*;
 public class WagerDTO {
     private long wagerId;
 
-
     private long outcomeId;
 
     private UserDTO userDTO;
 
     private WagerStatus wagerStatus;
 
-
     private double odds;
-
 
     private double betValue;
 
-
     private double payout;
+
+    public WagerDTO() {
+
+    }
 
     public WagerDTO(Wager wager) {
         this.wagerId = wager.getWagerId();
@@ -91,4 +91,19 @@ public class WagerDTO {
     public void setPayout(double payout) {
         this.payout = payout;
     }
+
+    public Wager toEntity(){
+        Wager wager = new Wager();
+        wager.setWagerId(wagerId);
+        Outcome outcome = new Outcome();
+        outcome.setOutcomeId(outcomeId);
+        wager.setOutcome(outcome);
+        wager.setUser(null);
+        wager.setWagerStatus(wagerStatus);
+        wager.setOdds(odds);
+        wager.setBetValue(betValue);
+        wager.setPayout(payout);
+        return wager;
+    }
+
 }

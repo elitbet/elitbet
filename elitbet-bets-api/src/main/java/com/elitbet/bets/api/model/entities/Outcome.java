@@ -20,6 +20,20 @@ public class Outcome {
     @OneToMany(mappedBy = "outcome")
     private List<Wager> wagerList = new ArrayList<>();
 
+    @Column(name="outcome_type")
+    @Enumerated(EnumType.STRING)
+    private OutcomeType outcomeType;
+
+    @Column(name="odds")
+    private double odds;
+
+    @Column(name="is_displayed_in_lines")
+    private boolean isDisplayedInLines;
+
+    @Column(name="outcome_period")
+    @Enumerated(EnumType.STRING)
+    private OutcomePeriod outcomePeriod;
+
     public Outcome() {
     }
 
@@ -45,6 +59,38 @@ public class Outcome {
 
     public void setWagerList(List<Wager> wagerList) {
         this.wagerList = wagerList;
+    }
+
+    public OutcomeType getOutcomeType() {
+        return outcomeType;
+    }
+
+    public void setOutcomeType(OutcomeType outcomeType) {
+        this.outcomeType = outcomeType;
+    }
+
+    public double getOdds() {
+        return odds;
+    }
+
+    public void setOdds(double odds) {
+        this.odds = odds;
+    }
+
+    public boolean isDisplayedInLines() {
+        return isDisplayedInLines;
+    }
+
+    public void setDisplayedInLines(boolean displayedInLines) {
+        isDisplayedInLines = displayedInLines;
+    }
+
+    public OutcomePeriod getOutcomePeriod() {
+        return outcomePeriod;
+    }
+
+    public void setOutcomePeriod(OutcomePeriod outcomePeriod) {
+        this.outcomePeriod = outcomePeriod;
     }
 
     @Override

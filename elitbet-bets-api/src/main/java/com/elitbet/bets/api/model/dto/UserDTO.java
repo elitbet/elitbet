@@ -4,11 +4,14 @@ package com.elitbet.bets.api.model.dto;
 import com.elitbet.bets.api.model.entities.User;
 
 public class UserDTO {
-    private Long id;
+    private long id;
     private String username;
     private String password;
     private String language;
     private String surname;
+
+    public UserDTO() {
+    }
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -18,11 +21,11 @@ public class UserDTO {
         this.surname = user.getSurname();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
