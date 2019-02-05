@@ -11,7 +11,7 @@ public class SeleniumConfiguration {
     ChromeOptions chromeOptions(){
         System.setProperty("webdriver.chrome.driver", "elitbet-live-scores-parser/chromedriver");
         ChromeOptions options = new ChromeOptions();
-        options.setHeadless(true);
+        options.setHeadless(false);//todo change to true
         return options;
     }
 }
