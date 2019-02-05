@@ -40,13 +40,11 @@ public abstract class FootballService {
 
     private void parseFootballToday(){
         WebDriver driver = new ChromeDriver(options);
-        // TODO: 04.02.19 set wait for tommorrow window
         driver.get(basicUrl);
-        parseFootballTomorrow(driver);
-//        loadElements(driver);
-//        for(int i=0;i<6;i++){
-//            parseFootballTomorrow(driver);
-//        }
+        loadElements(driver);
+        for(int i=0;i<7;i++){
+            parseFootballTomorrow(driver);
+        }
         driver.close();
     }
 
@@ -54,20 +52,13 @@ public abstract class FootballService {
         WebElement button = loadElement(driver, by);
         button.click();
         WebDriverWait wait = new WebDriverWait(driver,10);
-        System.out.println("wait before click button");
         wait.until(ExpectedConditions.attributeToBe(By.id("preload"),"style","display: none;"));
-        System.out.println("loaded after clckking button");
-        System.out.println("Clicked " + by.toString());
     }
 
     WebElement loadElement(WebDriver driver, By by) throws Exception{
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        System.out.println("before wait");
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(".table-main>.soccer"),1));
-        System.out.println("after watt");
-        WebElement element = driver.findElement(by);
-        System.out.println("Loading " + by.toString());
-        return element;
+        return driver.findElement(by);
     }
 
     private void parseFootballTomorrow(WebDriver driver){

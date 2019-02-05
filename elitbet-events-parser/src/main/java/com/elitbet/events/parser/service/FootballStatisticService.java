@@ -50,8 +50,6 @@ public class FootballStatisticService extends FootballService {
 
         Queue<TournamentWrapper> tournamentWrappersQueue = new ConcurrentLinkedQueue<>(tournamentWrappers);
 
-        System.out.println("Well done");
-
         try {
             runTournamentExecutorService(tournamentWrappersQueue);
         } catch (Exception e){
@@ -62,17 +60,14 @@ public class FootballStatisticService extends FootballService {
 
     private WebElement loadDateElement(WebDriver driver) throws Exception {
         WebElement date = loadElement(driver, By.className("today"));
-        System.out.println(date.getText());
+        System.out.println("Loading " + date.getText());
         return date;
     }
 
     private List<WebElement> loadTournamentElements(WebDriver driver){
         WebDriverWait wait = new WebDriverWait(driver,10);
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(".table-main>.soccer"),1));
-
-        List<WebElement> tournaments = driver.findElements(By.className("soccer"));
-        System.out.println(tournaments.size());
-        return tournaments;
+        return driver.findElements(By.className("soccer"));
     }
 
     private List<TournamentWrapper> loadTournamentWrappers(List<WebElement> tournamentElements, WebElement dateElement) throws Exception{
@@ -86,8 +81,7 @@ public class FootballStatisticService extends FootballService {
     }
 
     private void runTournamentExecutorService(Queue<TournamentWrapper> tournamentWrappers){
-        int threadNumber = 5;
-        System.out.println("Tournament wrappers: " + tournamentWrappers.size());
+        int threadNumber = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         List<Callable<Void>> creators = new ArrayList<>();
         Queue<EventWrapper> eventWrappers = new ConcurrentLinkedQueue<>();
@@ -101,7 +95,6 @@ public class FootballStatisticService extends FootballService {
                         WebElement country = tournamentElement.findElement(By.className("country_part"));
                         WebElement tournament = tournamentElement.findElement(By.className("tournament_part"));
                         List<WebElement> eventElements = tournamentElement.findElements(By.xpath("tbody/tr"));
-                        System.out.println("Event Elements: " + eventElements.size());
                         LocalTime update = tournamentWrapper.getUpdate();
                         for(WebElement eventElement:eventElements){
                             eventWrappers.add(new EventWrapper(tournament,date, country, eventElement, update));
@@ -115,7 +108,6 @@ public class FootballStatisticService extends FootballService {
         }
         try {
             executorService.invokeAll(creators);
-            System.out.println("Event Wrappers: " + eventWrappers.size());
             runEventExecutorService(eventWrappers);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -149,11 +141,8 @@ public class FootballStatisticService extends FootballService {
         statistic.setCountry(wrapper.getCountry().getText().replace(":",""));
         statistic.setStartTime(wrapper.getEvent().findElement(By.cssSelector("td.time.cell_ad")).getText());
         statistic.setStatus(wrapper.getEvent().findElement(By.cssSelector("td.timer.cell_aa")).getText());
-        statistic.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText());
-        statistic.setAwayTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-away.cell_ac")).getText());
-
-        System.out.println("ID= " + statistic.getId() + " DATE = " + statistic.getDate() +
-                " HOME = " + statistic.getHomeTeamName() + " AWAY = " + statistic.getAwayTeamName());
+        statistic.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText().trim());
+        statistic.setAwayTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-away.cell_ac")).getText().trim());
 
         return statistic;
     }
