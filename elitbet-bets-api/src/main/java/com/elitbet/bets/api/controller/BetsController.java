@@ -77,7 +77,7 @@ public class BetsController {
         return wagerDTOSresponse;
     }
 
-    @PreAuthorize(value = "hasRole('ROLE_USER')")
+    /*@PreAuthorize(value = "hasRole('ROLE_USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWager(@PathVariable long id){
@@ -114,7 +114,7 @@ public class BetsController {
             wagerDTOSresponse.add(new WagerDTO(wagerService.updateWager(wager)));
         }
         return wagerDTOSresponse;
-    }
+    }*/
 
 
 }
