@@ -1,4 +1,4 @@
-package com.elitbet.bets.api.model;
+package com.elitbet.bets.api.model.entities;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ public class Outcome {
     private Long outcomeId;
 
     @Column(name = "outcome_status")
+    @Enumerated(EnumType.STRING)
     private OutcomeStatus outcomeStatus;
 
     @OneToMany(mappedBy = "outcome")

@@ -1,8 +1,8 @@
 package com.elitbet.bets.api.services;
 
 import com.elitbet.bets.api.exceptions.SuchUserAlreadyExistException;
-import com.elitbet.bets.api.model.Role;
-import com.elitbet.bets.api.model.User;
+import com.elitbet.bets.api.model.entities.Role;
+import com.elitbet.bets.api.model.entities.User;
 import com.elitbet.bets.api.repositories.RoleRepository;
 import com.elitbet.bets.api.repositories.UserRepository;
 

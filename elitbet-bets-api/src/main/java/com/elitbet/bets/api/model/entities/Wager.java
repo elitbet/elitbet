@@ -1,4 +1,4 @@
-package com.elitbet.bets.api.model;
+package com.elitbet.bets.api.model.entities;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -16,17 +16,21 @@ public class Wager {
     private Outcome outcome;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "wager_status")
+    @Enumerated(EnumType.STRING)
     private WagerStatus wagerStatus;
 
     @Column(name = "odds")
     private double odds;
 
-    @Column(name = "bet_value")
+    @Column(name = "bet")
     private double betValue;
+
+    @Column(name = "payout")
+    private double payout;
 
     public Wager() {
     }
@@ -77,6 +81,15 @@ public class Wager {
 
     public void setBetValue(double betValue) {
         this.betValue = betValue;
+    }
+
+
+    public double getPayout() {
+        return payout;
+    }
+
+    public void setPayout(double payout) {
+        this.payout = payout;
     }
 
     @Override

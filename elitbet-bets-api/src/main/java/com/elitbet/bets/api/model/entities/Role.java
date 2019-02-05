@@ -1,4 +1,4 @@
-package com.elitbet.bets.api.model;
+package com.elitbet.bets.api.model.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
