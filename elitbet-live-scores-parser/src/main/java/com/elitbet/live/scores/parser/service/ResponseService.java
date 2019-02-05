@@ -1,15 +1,23 @@
 package com.elitbet.live.scores.parser.service;
 
+import com.elitbet.live.scores.parser.model.Event;
+import com.elitbet.live.scores.parser.model.EventContainer;
+import com.elitbet.live.scores.parser.model.EventType;
 import com.elitbet.live.scores.parser.model.Request;
-import com.elitbet.live.scores.parser.model.Response;
 import com.elitbet.live.scores.parser.model.odds.Odd;
 import com.elitbet.live.scores.parser.model.statistic.Statistic;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.*;
@@ -39,8 +47,10 @@ public class ResponseService implements SeleniumInterface {
                         e.printStackTrace();
                     }
                 } else {
-                    List<String> urls = createResponse(lowPriorityRequests, 2);
-                    sendResponse(urls);
+                    LocalTime update = LocalTime.now();
+                    List<Event> eventList = createResponse(lowPriorityRequests, 2);
+                    EventContainer container = new EventContainer(update, EventType.FOOTBALL_MATCH, eventList);
+                    sendEventContainer(container);
                 }
             }
         };
@@ -56,8 +66,10 @@ public class ResponseService implements SeleniumInterface {
                         e.printStackTrace();
                     }
                 }else {
-                    List<String> urls = createResponse(highPriorityRequests, 10);
-                    sendResponse(urls);
+                    LocalTime update = LocalTime.now();
+                    List<Event> eventList = createResponse(highPriorityRequests, 10);
+                    EventContainer container = new EventContainer(update, EventType.FOOTBALL_MATCH, eventList);
+                    sendEventContainer(container);
                 }
             }
         };
@@ -70,13 +82,12 @@ public class ResponseService implements SeleniumInterface {
 
     }
 
-    private List<String> createResponse(List<Request> requests, int threadNumber){
+    private List<Event> createResponse(List<Request> requests, int threadNumber){
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadNumber);
         List<Callable<String>> creators = new ArrayList<>();
         Queue<Request> requestQueue = new ConcurrentLinkedQueue<>(requests);
-        List<String> urls = Collections.synchronizedList(new LinkedList<>());
-
+        List<Event> eventList = Collections.synchronizedList(new LinkedList<>());
         Callable<String> callable = () -> {
             WebDriver driver = new ChromeDriver(options);
             while(true){
@@ -89,8 +100,8 @@ public class ResponseService implements SeleniumInterface {
                         LocalTime update = LocalTime.now();
                         Statistic statistic = footballStatisticService.loadFootballStatistic(driver);
                         List<Odd> odds = footballOddsService.loadOdds(driver, request);
-                        Response response = new Response(eventId, statistic, odds, update);
-                        urls.add(response.toUrl());
+                        Event event = new Event(eventId, statistic, odds, update);
+                        eventList.add(event);
                     } catch (Exception ignored) {}
                 }else {
                     break;
@@ -111,12 +122,26 @@ public class ResponseService implements SeleniumInterface {
             e.printStackTrace();
         }
 
-        return urls;
+        return eventList;
     }
 
-    private void sendResponse(List<String> urls){
-        System.out.println("SENDING " + urls.size() + " ITEMS");
-        urls.forEach(System.out::println);
+    private void sendEventContainer(EventContainer container){
+        ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        HttpEntity<EventContainer> httpEntity = new HttpEntity<>(container);
+        String eventsResource = "http://localhost:8081/events";
+        try {
+            URI eventsResourceURL = new URI(eventsResource);
+            restTemplate.put(eventsResourceURL,httpEntity);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ClientHttpRequestFactory getClientHttpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setConnectTimeout(1000);
+        return clientHttpRequestFactory;
     }
 
 }

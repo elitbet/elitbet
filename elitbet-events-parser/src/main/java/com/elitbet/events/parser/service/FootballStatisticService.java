@@ -1,8 +1,6 @@
 package com.elitbet.events.parser.service;
 
-import com.elitbet.events.parser.model.EventWrapper;
-import com.elitbet.events.parser.model.FootballStatistic;
-import com.elitbet.events.parser.model.TournamentWrapper;
+import com.elitbet.events.parser.model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -114,14 +112,13 @@ public class FootballStatisticService extends FootballService {
         }
     }
 
-
     private void runEventExecutorService(Queue<EventWrapper> eventWrappers){
         ExecutorService executorService = Executors.newFixedThreadPool(eventWrappers.size());
         List<Callable<Void>> creators = new ArrayList<>();
         for (EventWrapper wrapper : eventWrappers) {
             creators.add(() -> {
-                FootballStatistic statistic = getStatistic(wrapper);
-                urls.add(statistic.toURL());
+                Event event = getEvent(wrapper);
+                eventList.add(event);
                 return null;
             });
         }
@@ -132,13 +129,13 @@ public class FootballStatisticService extends FootballService {
         }
     }
 
-    private FootballStatistic getStatistic(EventWrapper wrapper){
+    private Event getEvent(EventWrapper wrapper){
 
-        FootballStatistic statistic = new FootballStatistic();
-        statistic.setId(wrapper.getEvent().getAttribute("id"));
+        FootballMatch statistic = new FootballMatch();
+        statistic.setEventId(wrapper.getEvent().getAttribute("id"));
         statistic.setDate(wrapper.getDate().getText());
-        statistic.setTournament(wrapper.getTournament().getText());
-        statistic.setCountry(wrapper.getCountry().getText().replace(":",""));
+        String tournament = wrapper.getTournament().getText() + wrapper.getCountry().getText();
+        statistic.setTournament(tournament);
         statistic.setStartTime(wrapper.getEvent().findElement(By.cssSelector("td.time.cell_ad")).getText());
         statistic.setStatus(wrapper.getEvent().findElement(By.cssSelector("td.timer.cell_aa")).getText());
         statistic.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText().trim());

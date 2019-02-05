@@ -2,7 +2,7 @@ package com.elitbet.events.parser.model;
 
 public class Event {
 
-    private String id;
+    private String eventId;
     private String tournament;
     private String date;
     private String startTime;
@@ -11,20 +11,20 @@ public class Event {
     public Event() {
     }
 
-    public Event(String id, String tournament, String date, String startTime, String status) {
-        this.id = id;
+    public Event(String eventId, String tournament, String date, String startTime, String status) {
+        this.eventId = eventId;
         this.tournament = tournament;
         this.date = date;
         this.startTime = startTime;
         this.status = status;
     }
 
-    public String getId() {
-        return id;
+    public String getEventId() {
+        return eventId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public String getTournament() {

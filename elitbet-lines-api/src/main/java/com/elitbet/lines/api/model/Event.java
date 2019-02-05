@@ -15,9 +15,11 @@ public class Event {
     private String eventId;
 
     @Column(name = "event_type")
+    @Enumerated(EnumType.STRING)
     private EventType eventType;
 
     @Column(name = "event_status")
+    @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;
 
     @OneToOne(fetch = FetchType.EAGER)
