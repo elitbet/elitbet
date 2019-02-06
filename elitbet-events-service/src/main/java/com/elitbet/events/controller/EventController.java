@@ -5,24 +5,23 @@ import com.elitbet.events.model.dto.EventDTO;
 import com.elitbet.events.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
-@Controller
+@RestController
 @RequestMapping("/events")
 public class EventController {
+    private final static Logger logger = Logger.getLogger(EventController.class.getName());
+
     @Autowired
     EventService eventService;
 
-    @PutMapping
-    public void updateEvents(@RequestBody EventDTO event){
-        System.out.println(event);
+    @PatchMapping
+    public void updateEvents(@RequestBody EventDTO[] event){
+        logger.info(String.valueOf(event.length));
     }
-
 }
