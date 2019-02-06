@@ -1,8 +1,6 @@
 package com.elitbet.wagers.services;
 
-import com.elitbet.wagers.model.entities.Outcome;
-import com.elitbet.wagers.model.entities.User;
-import com.elitbet.wagers.model.entities.Wager;
+import com.elitbet.wagers.model.entities.*;
 import com.elitbet.wagers.repositories.WagerRepository;
 import com.elitbet.wagers.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -60,7 +59,8 @@ public class WagerService {
             throw new InvalidParameterException("Bad odds value");
         }
         wager.setPayout(0.0);
-
+        wager.setWagerStatus(WagerStatus.NEW);
+        wager.setTime(new Date());
         return wagerRepository.save(wager);
     }
 
@@ -71,7 +71,33 @@ public class WagerService {
         if(wager.getPayout() < 0){
             throw new InvalidParameterException("Payout value must be positive integer");
         }
-        wagerDatabase.setPayout(wager.getPayout());
+
+        //CALCULATE PAYOUT
+
+        double payout = 0.0;
+        double odds = wagerDatabase.getOdds();
+        double betValue = wagerDatabase.getBetValue();
+
+        switch (wager.getWagerStatus()){
+            case PASSED:{
+                payout = odds*betValue;
+                break;
+            }
+            case NOT_PASSED:{
+                payout = 0;
+                break;
+            }
+            case NEW:{
+                return wagerDatabase;
+            }
+            case RETURNED:{
+                payout = betValue;
+                break;
+            }
+        }
+
+        wagerDatabase.setPayout(payout);
+
         return wagerRepository.save(wagerDatabase);
     }
 

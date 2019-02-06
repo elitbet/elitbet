@@ -1,7 +1,7 @@
 package com.elitbet.wagers.model.entities;
 
 public enum WagerStatus {
-    NO_STATUS,
+    NEW,
     PASSED,
     NOT_PASSED,
     RETURNED

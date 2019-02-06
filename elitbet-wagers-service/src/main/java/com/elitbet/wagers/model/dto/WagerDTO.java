@@ -4,12 +4,14 @@ import com.elitbet.wagers.model.entities.Outcome;
 import com.elitbet.wagers.model.entities.Wager;
 import com.elitbet.wagers.model.entities.WagerStatus;
 
+import java.util.Date;
+
 public class WagerDTO {
     private long wagerId;
 
     private long outcomeId;
 
-    private UserDTO userDTO;
+    private UserPublicDTO userDTO;
 
     private WagerStatus wagerStatus;
 
@@ -19,6 +21,8 @@ public class WagerDTO {
 
     private double payout;
 
+    private long time;
+
     public WagerDTO() {
 
     }
@@ -26,11 +30,12 @@ public class WagerDTO {
     public WagerDTO(Wager wager) {
         this.wagerId = wager.getWagerId();
         this.outcomeId = wager.getOutcome().getOutcomeId();
-        this.userDTO = new UserDTO(wager.getUser());
+        this.userDTO = new UserPublicDTO(wager.getUser());
         this.wagerStatus = wager.getWagerStatus();
         this.odds = wager.getOdds();
         this.betValue = wager.getBetValue();
         this.payout = wager.getPayout();
+        this.time = wager.getTime().getTime();
     }
 
     public long getWagerId() {
@@ -49,7 +54,7 @@ public class WagerDTO {
         this.outcomeId = outcomeId;
     }
 
-    public UserDTO getUserDTO() {
+    public UserPublicDTO getUserDTO() {
         return userDTO;
     }
 
@@ -89,6 +94,14 @@ public class WagerDTO {
         this.payout = payout;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public Wager toEntity(){
         Wager wager = new Wager();
         wager.setWagerId(wagerId);
@@ -100,6 +113,7 @@ public class WagerDTO {
         wager.setOdds(odds);
         wager.setBetValue(betValue);
         wager.setPayout(payout);
+        wager.setTime(new Date(time));
         return wager;
     }
 
