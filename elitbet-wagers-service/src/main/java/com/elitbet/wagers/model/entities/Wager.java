@@ -1,6 +1,7 @@
 package com.elitbet.wagers.model.entities;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -31,6 +32,9 @@ public class Wager {
 
     @Column(name = "payout")
     private double payout;
+
+    @Column(name = "time")
+    private Date time;
 
     public Wager() {
     }
@@ -92,6 +96,14 @@ public class Wager {
         this.payout = payout;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,14 +119,15 @@ public class Wager {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Wager{");
-        sb.append("wagerId=").append(wagerId);
-        sb.append(", outcome=").append(outcome);
-        sb.append(", user=").append(user);
-        sb.append(", wagerStatus=").append(wagerStatus);
-        sb.append(", odds=").append(odds);
-        sb.append(", betValue=").append(betValue);
-        sb.append('}');
-        return sb.toString();
+        return "Wager{" +
+                "wagerId=" + wagerId +
+                ", outcome=" + outcome +
+                ", user=" + user +
+                ", wagerStatus=" + wagerStatus +
+                ", odds=" + odds +
+                ", betValue=" + betValue +
+                ", payout=" + payout +
+                ", time=" + time +
+                '}';
     }
 }

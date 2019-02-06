@@ -1,6 +1,7 @@
 package com.elitbet.wagers.controller;
 
 import com.elitbet.wagers.model.dto.WagerDTO;
+import com.elitbet.wagers.model.entities.OutcomeStatus;
 import com.elitbet.wagers.model.entities.Wager;
 import com.elitbet.wagers.services.WagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class BetsController {
             wagerService.deleteById(wagerDTO.getWagerId());
         }
     }
-
+*/
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
@@ -111,8 +112,9 @@ public class BetsController {
             Wager wager = wagerDTO.toEntity();
             wagerDTOSresponse.add(new WagerDTO(wagerService.updateWager(wager)));
         }
+
         return wagerDTOSresponse;
-    }*/
+    }
 
 
 }
