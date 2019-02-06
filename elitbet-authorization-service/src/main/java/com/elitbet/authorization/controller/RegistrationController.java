@@ -1,8 +1,8 @@
-package elitbet.com.authorization.controller;
+package com.elitbet.authorization.controller;
 
-import elitbet.com.authorization.model.entities.User;
-import elitbet.com.authorization.model.dto.UserDTO;
-import elitbet.com.authorization.services.UserService;
+import com.elitbet.authorization.model.dto.UserDTO;
+import com.elitbet.authorization.model.entities.User;
+import com.elitbet.authorization.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

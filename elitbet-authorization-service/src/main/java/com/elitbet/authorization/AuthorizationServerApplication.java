@@ -1,4 +1,4 @@
-package elitbet.com.authorization;
+package com.elitbet.authorization;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

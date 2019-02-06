@@ -1,6 +1,6 @@
-package elitbet.com.authorization.controller.exception;
+package com.elitbet.authorization.controller.exception;
 
-import elitbet.com.authorization.exceptions.SuchUserAlreadyExistException;
+import com.elitbet.authorization.exceptions.SuchUserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

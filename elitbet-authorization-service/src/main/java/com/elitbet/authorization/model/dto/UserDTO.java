@@ -1,6 +1,6 @@
-package elitbet.com.authorization.model.dto;
+package com.elitbet.authorization.model.dto;
 
-import elitbet.com.authorization.model.entities.User;
+import com.elitbet.authorization.model.entities.User;
 
 public class UserDTO {
     private Long id;
