@@ -10,12 +10,13 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>elitbet-events-parser</module>
-        <module>elitbet-customer-api</module>
-        <module>elitbet-lines-api</module>
-        <module>elitbet-bets-api</module>
+        <module>elitbet-customers-service</module>
+        <module>elitbet-outcomes-service</module>
+        <module>elitbet-wagers-service</module>
         <module>elitbet-web</module>
-        <module>elitbet-authorization-server</module>
+        <module>elitbet-authorization-service</module>
         <module>elitbet-live-scores-parser</module>
+        <module>elitbet-events-service</module>
     </modules>
 
     <properties>

@@ -2,8 +2,6 @@ package com.elitbet.events.parser.model;
 
 import java.time.LocalTime;
 import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
 
 public class EventContainer {
 
