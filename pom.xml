@@ -17,6 +17,7 @@
         <module>elitbet-authorization-service</module>
         <module>elitbet-live-scores-parser</module>
         <module>elitbet-events-service</module>
+        <module>elitbet-statistic-service</module>
     </modules>
 
     <properties>
