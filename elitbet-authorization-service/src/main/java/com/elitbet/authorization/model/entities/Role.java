@@ -1,4 +1,4 @@
-package elitbet.com.authorization.model.entities;
+package com.elitbet.authorization.model.entities;
 
 import javax.persistence.*;
 

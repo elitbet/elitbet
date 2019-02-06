@@ -1,4 +1,4 @@
-package elitbet.com.authorization.config;
+package com.elitbet.authorization.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;

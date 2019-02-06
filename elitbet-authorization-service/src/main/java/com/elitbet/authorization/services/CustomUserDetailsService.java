@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package elitbet.com.authorization.services;
+package com.elitbet.authorization.services;
 
 import java.util.stream.Collectors;
 
-import elitbet.com.authorization.repositories.UserRepository;
+import com.elitbet.authorization.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

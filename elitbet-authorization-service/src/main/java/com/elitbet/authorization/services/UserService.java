@@ -1,13 +1,13 @@
-package elitbet.com.authorization.services;
+package com.elitbet.authorization.services;
 
-import elitbet.com.authorization.exceptions.SuchUserAlreadyExistException;
-import elitbet.com.authorization.repositories.RoleRepository;
-import elitbet.com.authorization.model.entities.User;
-import elitbet.com.authorization.model.entities.Role;
+import com.elitbet.authorization.exceptions.SuchUserAlreadyExistException;
+import com.elitbet.authorization.model.entities.Role;
+import com.elitbet.authorization.model.entities.User;
+import com.elitbet.authorization.repositories.RoleRepository;
+import com.elitbet.authorization.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import elitbet.com.authorization.repositories.UserRepository;
 
 import java.util.Arrays;
 
