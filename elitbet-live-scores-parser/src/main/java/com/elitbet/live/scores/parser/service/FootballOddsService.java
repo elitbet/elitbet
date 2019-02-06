@@ -1,9 +1,8 @@
 package com.elitbet.live.scores.parser.service;
 
+import com.elitbet.live.scores.parser.model.odds.OutcomePeriod;
 import com.elitbet.live.scores.parser.model.Request;
-import com.elitbet.live.scores.parser.model.odds.Odd;
-import com.elitbet.live.scores.parser.model.odds.Odd_1x2;
-import com.elitbet.live.scores.parser.model.odds.Odd_OverUnder;
+import com.elitbet.live.scores.parser.model.odds.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -47,7 +46,7 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-1x2"));
             clickElement(driver, By.id("bookmark-1x2-ft"));
             WebElement block = loadElement(driver, By.id("block-1x2-ft"));
-            return loadOdds_1x2(block, "1x2_FullTime");
+            return loadOdds_1x2(block, OutcomePeriod.FULL_TIME);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
@@ -58,7 +57,7 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-1x2"));
             clickElement(driver, By.id("bookmark-1x2-1hf"));
             WebElement block = loadElement(driver, By.id("block-1x2-1hf"));
-            return loadOdds_1x2(block, "1x2_FirstHalf");
+            return loadOdds_1x2(block, OutcomePeriod.FIRST_HALF);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
@@ -69,7 +68,7 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-1x2"));
             clickElement(driver, By.id("bookmark-1x2-2hf"));
             WebElement block = loadElement(driver, By.id("block-1x2-2hf"));
-            return loadOdds_1x2(block, "1x2_SecondHalf");
+            return loadOdds_1x2(block, OutcomePeriod.SECOND_HALF);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
@@ -80,7 +79,7 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-under-over"));
             clickElement(driver, By.id("bookmark-under-over-ft"));
             WebElement block = loadElement(driver, By.id("block-under-over-ft"));
-            return loadOdds_OverUnder(block, "OverUnder_FullTime");
+            return loadOdds_OverUnder(block, OutcomePeriod.FULL_TIME);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
@@ -91,7 +90,7 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-under-over"));
             clickElement(driver, By.id("bookmark-under-over-1hf"));
             WebElement block = loadElement(driver, By.id("block-under-over-1hf"));
-            return loadOdds_OverUnder(block, "OverUnder_FirstHalf");
+            return loadOdds_OverUnder(block, OutcomePeriod.FIRST_HALF);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
@@ -102,13 +101,13 @@ class FootballOddsService implements SeleniumInterface {
             clickElement(driver, By.id("bookmark-under-over"));
             clickElement(driver, By.id("bookmark-under-over-2hf"));
             WebElement block = loadElement(driver, By.id("block-under-over-2hf"));
-            return loadOdds_OverUnder(block, "OverUnder_SecondHalf");
+            return loadOdds_OverUnder(block, OutcomePeriod.SECOND_HALF);
         } catch (Exception ignored) {
             return new ArrayList<>();
         }
     }
 
-    private List<Odd> loadOdds_1x2(WebElement block, String description){
+    private List<Odd> loadOdds_1x2(WebElement block, OutcomePeriod period){
         List<Odd> oddList = new LinkedList<>();
         List<WebElement> oddTable;
         try {
@@ -123,15 +122,15 @@ class FootballOddsService implements SeleniumInterface {
                 double firstWin = oddValues[0];
                 double draw = oddValues[1];
                 double secondWin = oddValues[2];
-                Odd odd = new Odd_1x2(bookmaker, description, firstWin, draw, secondWin);
-                oddList.add(odd);
+                OddContainer container = new OddContainer_1x2(bookmaker,firstWin,draw,secondWin,period);
+                oddList.addAll(container.toOdds());
             } catch (Exception ignored) {
             }
         }
         return oddList;
     }
 
-    private List<Odd> loadOdds_OverUnder(WebElement block, String description) {
+    private List<Odd> loadOdds_OverUnder(WebElement block, OutcomePeriod period) {
         List<Odd> oddList = new LinkedList<>();
         List<WebElement> oddTable;
         try {
@@ -146,8 +145,8 @@ class FootballOddsService implements SeleniumInterface {
                 double[] oddValues = oddValues(oddRaw, 2);
                 double over = oddValues[0];
                 double under = oddValues[1];
-                Odd odd = new Odd_OverUnder(bookmaker, description, total, over, under);
-                oddList.add(odd);
+                OddContainer container = new OddContainer_OverUnder(bookmaker, total, over, under, period);
+                oddList.addAll(container.toOdds());
             } catch (Exception ignored) {
             }
         }
