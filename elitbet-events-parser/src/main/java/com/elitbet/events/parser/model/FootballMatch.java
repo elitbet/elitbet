@@ -12,6 +12,7 @@ public class FootballMatch extends Event {
     }
 
     public FootballMatch() {
+        eventType = EventType.FOOTBALL_MATCH;
     }
 
     public String getHomeTeamName() {

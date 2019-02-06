@@ -7,11 +7,12 @@ public class Event {
     private String date;
     private String startTime;
     private String status;
+    EventType eventType;
 
-    public Event() {
+    Event() {
     }
 
-    public Event(String eventId, String tournament, String date, String startTime, String status) {
+    Event(String eventId, String tournament, String date, String startTime, String status) {
         this.eventId = eventId;
         this.tournament = tournament;
         this.date = date;

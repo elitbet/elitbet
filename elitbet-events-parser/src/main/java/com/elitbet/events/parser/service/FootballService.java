@@ -2,7 +2,9 @@ package com.elitbet.events.parser.service;
 
 import com.elitbet.events.parser.model.Event;
 import com.elitbet.events.parser.model.EventContainer;
-import com.elitbet.events.parser.model.EventType;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import okhttp3.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,13 +13,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,23 +34,52 @@ public abstract class FootballService {
             eventList = Collections.synchronizedList(new LinkedList<>());
             LocalTime update = LocalTime.now();
             parseFootballToday();
-            EventType eventType = EventType.FOOTBALL_MATCH;
-            EventContainer container = new EventContainer(update, eventType, eventList);
+            EventContainer container = new EventContainer(update, eventList);
+            System.out.println("Before Loading");
             sendUrlContainer(container);
         }
     }
 
     private void sendUrlContainer(EventContainer container){
-        ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-        HttpEntity<EventContainer> httpEntity = new HttpEntity<>(container);
-        String eventsResource = "http://localhost:8081/events";
-        try {
-            URI eventsResourceURL = new URI(eventsResource);
-            restTemplate.put(eventsResourceURL,httpEntity);
-        } catch (URISyntaxException e) {
+
+        Gson gson = new Gson();
+        String jsonBody = gson.toJson(container);
+
+        System.out.println("----JSONBODY---");
+        System.out.println(jsonBody);
+
+        String url = "http://localhost:8081/events";
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonBody);
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.body() != null) {
+                String pageJson = response.body().string();
+                System.out.println(pageJson);
+            } else {
+                System.out.println("Response error");
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+//        ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
+//        RestTemplate restTemplate = new RestTemplate(requestFactory);
+//        HttpEntity<EventContainer> httpEntity = new HttpEntity<>(container);
+//        String eventsResource = "http://localhost:8081/events";
+//        try {
+//            URI eventsResourceURL = new URI(eventsResource);
+//            restTemplate.put(eventsResourceURL,httpEntity);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private ClientHttpRequestFactory getClientHttpRequestFactory() {
@@ -67,9 +95,9 @@ public abstract class FootballService {
         String basicUrl = "https://www.flashscore.com/";
         driver.get(basicUrl);
         loadElements(driver);
-        for(int i=0;i<7;i++){
-            parseFootballTomorrow(driver);
-        }
+//        for(int i=0;i<7;i++){
+//            parseFootballTomorrow(driver);
+//        }
         driver.close();
     }
 

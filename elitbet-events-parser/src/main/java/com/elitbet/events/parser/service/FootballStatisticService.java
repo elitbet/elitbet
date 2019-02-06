@@ -131,17 +131,17 @@ public class FootballStatisticService extends FootballService {
 
     private Event getEvent(EventWrapper wrapper){
 
-        FootballMatch statistic = new FootballMatch();
-        statistic.setEventId(wrapper.getEvent().getAttribute("id"));
-        statistic.setDate(wrapper.getDate().getText());
+        FootballMatch footballMatch = new FootballMatch();
+        footballMatch.setEventId(wrapper.getEvent().getAttribute("id"));
+        footballMatch.setDate(wrapper.getDate().getText());
         String tournament = wrapper.getTournament().getText() + wrapper.getCountry().getText();
-        statistic.setTournament(tournament);
-        statistic.setStartTime(wrapper.getEvent().findElement(By.cssSelector("td.time.cell_ad")).getText());
-        statistic.setStatus(wrapper.getEvent().findElement(By.cssSelector("td.timer.cell_aa")).getText());
-        statistic.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText().trim());
-        statistic.setAwayTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-away.cell_ac")).getText().trim());
+        footballMatch.setTournament(tournament);
+        footballMatch.setStartTime(wrapper.getEvent().findElement(By.cssSelector("td.time.cell_ad")).getText());
+        footballMatch.setStatus(wrapper.getEvent().findElement(By.cssSelector("td.timer.cell_aa")).getText());
+        footballMatch.setHomeTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-home.cell_ab")).getText().trim());
+        footballMatch.setAwayTeamName(wrapper.getEvent().findElement(By.cssSelector("td.team-away.cell_ac")).getText().trim());
 
-        return statistic;
+        return footballMatch;
     }
 
 }

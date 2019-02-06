@@ -6,15 +6,10 @@ import java.util.Collection;
 public class EventContainer {
 
     private LocalTime update;
-    private EventType eventType;
     private Collection<Event> events;
 
-    public EventContainer() {
-    }
-
-    public EventContainer(LocalTime update, EventType eventType, Collection<Event> events) {
+    public EventContainer(LocalTime update, Collection<Event> events) {
         this.update = update;
-        this.eventType = eventType;
         this.events = events;
     }
 
@@ -26,14 +21,6 @@ public class EventContainer {
         this.update = update;
     }
 
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
-    }
-
     public Collection<Event> getEvents() {
         return events;
     }
@@ -41,4 +28,5 @@ public class EventContainer {
     public void setEvents(Collection<Event> events) {
         this.events = events;
     }
+
 }
