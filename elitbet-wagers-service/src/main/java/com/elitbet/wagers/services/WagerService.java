@@ -68,9 +68,6 @@ public class WagerService {
     public Wager updateWager(Wager wager){
         Wager wagerDatabase = getById(wager.getWagerId());
         wagerDatabase.setWagerStatus(wager.getWagerStatus());
-        if(wager.getPayout() < 0){
-            throw new InvalidParameterException("Payout value must be positive integer");
-        }
 
         //CALCULATE PAYOUT
 

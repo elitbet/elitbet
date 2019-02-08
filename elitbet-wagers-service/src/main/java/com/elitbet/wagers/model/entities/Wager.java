@@ -39,6 +39,16 @@ public class Wager {
     public Wager() {
     }
 
+    public Wager(Outcome outcome, User user, WagerStatus wagerStatus, double odds, double betValue, double payout, Date time) {
+        this.outcome = outcome;
+        this.user = user;
+        this.wagerStatus = wagerStatus;
+        this.odds = odds;
+        this.betValue = betValue;
+        this.payout = payout;
+        this.time = time;
+    }
+
     public long getWagerId() {
         return wagerId;
     }
