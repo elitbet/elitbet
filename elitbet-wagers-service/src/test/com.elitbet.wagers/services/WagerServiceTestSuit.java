@@ -69,7 +69,6 @@ public class WagerServiceTestSuit {
     @MockBean
     OutcomeService outcomeService;
 
-
     @Test
     public void getAllForCurrentUser(){
         PageRequest of = PageRequest.of(0,20,new Sort(Sort.Direction.DESC,"wagerId"));
