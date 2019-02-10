@@ -10,7 +10,7 @@ import java.util.Set;
 @Service
 public class StatisticServiceImpl implements StatisticService {
     @Override
-    public Statistic createStatistic(Statistic statistic) {
+    public Statistic createStatistic(EventType eventType, Statistic statistic) {
         statistic.setId(15);
         return statistic;
     }

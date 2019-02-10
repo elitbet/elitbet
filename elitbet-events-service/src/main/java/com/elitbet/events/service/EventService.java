@@ -7,5 +7,6 @@ import java.util.List;
 public interface EventService {
 
     void updateEventList(Event[] eventList);
+    List<Event> getAllEvents();
 
 }

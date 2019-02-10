@@ -1,8 +1,6 @@
 package org.elitbet.statistic.controller;
 
-import org.elitbet.statistic.model.Outcome;
-import org.elitbet.statistic.model.OutcomePeriod;
-import org.elitbet.statistic.model.Statistic;
+import org.elitbet.statistic.model.*;
 import org.elitbet.statistic.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +18,8 @@ public class MainController {
     StatisticService statisticService;
 
     @PostMapping
-    public ResponseEntity<Statistic> createStatistic(@RequestBody Statistic statistic) throws URISyntaxException {
-        statistic = statisticService.createStatistic(statistic);
+    public ResponseEntity<Statistic> createStatistic(@RequestBody Request json) throws URISyntaxException {
+        Statistic statistic = statisticService.createStatistic(json.getEventType(), json.getStatistic());
         URI uri = new URI("localhost:8081/statistic/" + statistic.getId());
         return ResponseEntity.ok(statistic);
     }

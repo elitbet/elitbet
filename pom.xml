@@ -18,6 +18,7 @@
         <module>elitbet-live-scores-parser</module>
         <module>elitbet-events-service</module>
         <module>elitbet-statistic-service</module>
+        <module>elitbet-core-service</module>
     </modules>
 
     <properties>
