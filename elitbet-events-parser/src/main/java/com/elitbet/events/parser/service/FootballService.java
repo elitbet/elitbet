@@ -3,7 +3,6 @@ package com.elitbet.events.parser.service;
 import com.elitbet.events.parser.model.Event;
 import com.elitbet.events.parser.model.EventContainer;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import okhttp3.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

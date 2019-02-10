@@ -1,16 +1,22 @@
 package com.elitbet.events.model.dto;
 
+import com.elitbet.events.model.Event;
+import com.elitbet.events.model.EventType;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class EventDTO {
 
     private String eventId;
 
-    private String eventType;
+    private EventType eventType;
 
     private String tournament;
 
     private String date;
 
-    private String startTime;
+    private LocalTime startTime;
 
     private String status;
 
@@ -29,11 +35,11 @@ public class EventDTO {
         this.eventId = eventId;
     }
 
-    public String getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 
@@ -53,11 +59,11 @@ public class EventDTO {
         this.date = date;
     }
 
-    public String getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
@@ -89,14 +95,21 @@ public class EventDTO {
     public String toString() {
         final StringBuilder sb = new StringBuilder("EventDTO{");
         sb.append("eventId='").append(eventId).append('\'');
-        sb.append(", eventType='").append(eventType).append('\'');
+        sb.append(", eventType=").append(eventType);
         sb.append(", tournament='").append(tournament).append('\'');
-        sb.append(", date='").append(date).append('\'');
-        sb.append(", startTime='").append(startTime).append('\'');
+        sb.append(", date=").append(date);
+        sb.append(", startTime=").append(startTime);
         sb.append(", status='").append(status).append('\'');
         sb.append(", homeTeam='").append(homeTeam).append('\'');
         sb.append(", awayTeam='").append(awayTeam).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    Event toEntity(){
+        Event event = new Event();
+        event.setEventId(this.eventId);
+        event.setEventType(this.eventType);
+        return event;
     }
 }
